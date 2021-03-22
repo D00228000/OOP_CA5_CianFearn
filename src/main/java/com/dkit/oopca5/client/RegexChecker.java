@@ -5,4 +5,8 @@ package com.dkit.oopca5.client;
 
 public class RegexChecker
 {
+    public static final String CAORegex = "\\d{8}";
+    public static final String DOBRegex = "^[0-9]{4}\\-[0-9]{2}\\-[0-9]{2}$";
+    public static final String passwordRegex = "^(.+){8,16}$";
+    public static final String emailRegex = "^(.+)@(.+)$";
 }
