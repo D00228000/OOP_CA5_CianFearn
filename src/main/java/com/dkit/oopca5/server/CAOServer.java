@@ -7,89 +7,99 @@ package com.dkit.oopca5.server;
 
 import com.dkit.oopca5.core.CAOService;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.SocketException;
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 public class CAOServer
 {
     public static void main(String[] args)
     {
-        boolean continueRunning = true;
-        System.out.println("This is the server");
-
-        DatagramSocket serverSocket = null;
         try
         {
-            //create a socket to send and receive
-            serverSocket = new DatagramSocket(CAOService.SERVER_PORT);
+            ServerSocket listeningSocket = new ServerSocket(CAOService.LISTENING_ON_PORT);
+            Socket dataSocket = null;
 
-            //The server should run forever hence use a while
-            while(continueRunning)
+            boolean continueRunning = true;
+            while (continueRunning)
             {
-                //create an array to store incoming messages
-                byte[] incomingMessage = new byte[CAOService.MAX_LEN];
-                DatagramPacket incomingPacket = new DatagramPacket(incomingMessage, incomingMessage.length);
+                System.out.println("Sever is listening on port: "+CAOService.LISTENING_ON_PORT);
+                dataSocket = listeningSocket.accept();
 
-                //wait for a message
-                //BLOCKING
-                serverSocket.receive(incomingPacket);
-                System.out.println("Listening on port: "+CAOService.SERVER_PORT);
+                //Creating the input and output streams
+                OutputStream outputStream = dataSocket.getOutputStream();
+                PrintWriter output = new PrintWriter(new OutputStreamWriter(outputStream));
+                InputStream inputStream = dataSocket.getInputStream();
+                Scanner input = new Scanner(new InputStreamReader(inputStream));
+                //Keyboard and message declarations
+                String incomingMessage = "";
+                String response = "";
 
-                //recreate the message received
-                String data = new String(incomingPacket.getData());
-                data = data.trim();
-                String[] messageComponents = data.split(CAOService.BREAKING_CHARACTER);
-
-                //create a response
-                if(messageComponents[0].equalsIgnoreCase(CAOService.REGISTER_COMMAND))
+                //The server should run forever hence use a while
+                while (true)
                 {
-                    //example response
-                    //response = data.replace("echo"+ComboServiceDetails.breakCharacters,"");
+                    try
+                    {
+                        //Take the information from the client
+                        incomingMessage = input.nextLine();
+                        String[] messageComponents = incomingMessage.split(CAOService.BREAKING_CHARACTER);
+                        System.out.println("Received message: " + incomingMessage);
 
-                    //create proper responses with database connection response
-                }
-                else if(messageComponents[0].equalsIgnoreCase("LOGIN"))
-                {
+                        //create a response
+                        if (messageComponents[0].equalsIgnoreCase(CAOService.REGISTER_COMMAND))
+                        {
+                            //example response
+                            //response = data.replace("echo"+ComboServiceDetails.breakCharacters,"");
 
-                }
-                else if(messageComponents[0].equalsIgnoreCase("LOGOUT"))
-                {
+                            //create proper responses with database connection response
+                        }
+                        else if (messageComponents[0].equalsIgnoreCase("LOGIN"))
+                        {
 
-                }
-                else if(messageComponents[0].equalsIgnoreCase("DISPLAY COURSE"))
-                {
+                        }
+                        else if (messageComponents[0].equalsIgnoreCase("LOGOUT"))
+                        {
 
-                }
-                else if(messageComponents[0].equalsIgnoreCase("DISPLAY CURRENT"))
-                {
+                        }
+                        else if (messageComponents[0].equalsIgnoreCase("DISPLAY COURSE"))
+                        {
 
-                }
-                else if(messageComponents[0].equalsIgnoreCase("DISPLAY_ALL"))
-                {
+                        }
+                        else if (messageComponents[0].equalsIgnoreCase("DISPLAY CURRENT"))
+                        {
 
-                }
-                else if(messageComponents[0].equalsIgnoreCase("UPDATE CURRENT"))
-                {
+                        }
+                        else if (messageComponents[0].equalsIgnoreCase("DISPLAY_ALL"))
+                        {
+
+                        }
+                        else if (messageComponents[0].equalsIgnoreCase("UPDATE CURRENT"))
+                        {
+
+                        }
+                        output.println(response);
+                        output.flush();
+                    }
+                    catch (NoSuchElementException e)
+                    {
+                        System.out.println("A client has disconnected from the server");
+                        //dataSocket.close();
+                        //listeningSocket.close();
+                    }
 
                 }
             }
+            dataSocket.close();
+            listeningSocket.close();
+
         }
-        catch(SocketException e)
+        catch (IOException e)
         {
-            System.out.println("There was an error creating the server socket "+ e.getMessage());
+            System.out.println(e.getMessage());
         }
-        catch(IOException ioe)
-        {
-            System.out.println("There was an IO error on the server "+ioe.getMessage());
-        }
-        finally
-        {
-            if(serverSocket != null)
-            {
-                serverSocket.close();
-            }
-        }
+
     }
 }
+

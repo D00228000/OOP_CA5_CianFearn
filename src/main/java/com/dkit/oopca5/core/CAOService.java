@@ -5,14 +5,26 @@ package com.dkit.oopca5.core;
 
 public class CAOService
 {
-    public static final int CLIENT_PORT = 50025;
+    //NOTE: UPD uses separate ports
+    //NOTE TCP uses a single port for communication (check if through)
+
+    //public static final int SERVER_PORT = 50026;
+    //public static final int CLIENT_PORT = 50025;
     public static final String HOSTNAME = "localhost";
-    public static final int  SERVER_PORT = 50026;
+    public static final int LISTENING_ON_PORT = 50025;
+
 
     public static final String BREAKING_CHARACTER = "%%";
     public static final int MAX_LEN = 200;
+    public static final String END_SESSION = "QUIT";
+    public static final String SESSION_TERMINATED = "GOODBYE";
+
+    public static final String UNKNOWN = "UNKNOWN";
 
     public static final String REGISTER_COMMAND = "REGISTER";
     public static final String SUCCESSFUL_REGISTER = "REGISTERED";
     public static final String FAILED_REGISTER = "REG FAILED";
+    public static final String ATTEMPT_LOGIN = "ATTEMPT LOGIN";
+    public static final String SUCCESSFUL_LOGIN = "LOGIN";
+    public static final String FAILED_LOGIN = "FAILED LOGIN";
 }

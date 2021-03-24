@@ -10,7 +10,7 @@ import com.dkit.oopca5.core.CAOService;
 import com.dkit.oopca5.core.Colours;
 import com.dkit.oopca5.core.Student;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -19,30 +19,32 @@ import java.util.regex.Pattern;
 public class CAOClient
 {
     private static boolean loggedIntoAccount = false;
-    private static String message = null;
-    private static boolean sendMessage = true;
 
     public static void main(String[] args)
     {
-        Scanner keyboard = new Scanner(System.in);
-        //Create the client socket
-        DatagramSocket clientSocket = null;
-
         try
         {
-            InetAddress serverHost = InetAddress.getByName(CAOService.HOSTNAME);
-            clientSocket = new DatagramSocket(CAOService.CLIENT_PORT);
+            //Creating a TCP socket
+            Socket dataSocket = new Socket(CAOService.HOSTNAME, CAOService.LISTENING_ON_PORT);
+            //Creating the input and output streams
+            OutputStream outputStream = dataSocket.getOutputStream();
+            PrintWriter output = new PrintWriter(new OutputStreamWriter(outputStream));
+            InputStream inputStream = dataSocket.getInputStream();
+            Scanner input = new Scanner(new InputStreamReader(inputStream));
+            //Keyboard and message declarations
+            Scanner keyboard = new Scanner(System.in);
+            String message = "";
 
-
-            boolean continueRunning = true;
-            while(continueRunning)//maybe remove this while loop as its an infinite loop in another infinite loop
+            while(!message.equals(CAOService.END_SESSION))//maybe remove this while loop as its an infinite loop in another infinite loop
             {
+                //display initial menu
+                displayInitialMenu();
+                String response = "";
+
                 //allow for input and other options
                 InitialMenuChoices initialMenuChoices = InitialMenuChoices.CONTINUE;
-                while (initialMenuChoices != InitialMenuChoices.QUIT)
+                while (initialMenuChoices != InitialMenuChoices.QUIT)//change while to an if because already in a while loop
                 {
-                    //display initial menu
-                    displayInitialMenu();
                     initialMenuChoices = InitialMenuChoices.values()[Integer.parseInt(keyboard.nextLine().trim())];
                     System.out.println();
 
@@ -51,47 +53,59 @@ public class CAOClient
                         case REGISTER:
                             registerStudent(keyboard);
                             message = CAOService.REGISTER_COMMAND;
+                            output.println(message);
+                            output.flush();
+
+                            response = input.nextLine();
+                            if(response.equals(CAOService.SUCCESSFUL_REGISTER))
+                            {
+                                System.out.println("The student has been registered");
+                            }
+                            else
+                            {
+                                System.out.println("The student has not been registered");
+                            }
                             break;
                         case LOGIN:
                             login(keyboard,loggedIntoAccount);
+                            message = CAOService.ATTEMPT_LOGIN;
+                            output.println(message);
+                            output.flush();
+
+                            response = input.nextLine();
+                            if(response.equals(CAOService.SUCCESSFUL_LOGIN))
+                            {
+                                System.out.println("You have logged in");
+                            }
+                            else if(response.equals(CAOService.FAILED_LOGIN))
+                            {
+                                System.out.println("Incorrect login details. Try again");
+                            }
                             break;
                         case QUIT:
-                            continueRunning = false;
-                            sendMessage = false;
-                            System.out.println("You have exited the System");
+                            message = CAOService.END_SESSION;
+                            output.println(message);
+                            output.flush();
+
+                            //Listen for a response
+                            response = input.nextLine();
+                            if(response.equals(CAOService.SESSION_TERMINATED))
+                            {
+                                System.out.println("Session has been terminated");
+                            }
                             break;
                         default:
                             System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
                     }
-
-
-
-
+                    if(response.equals(CAOService.UNKNOWN))
+                    {
+                        System.out.println("Sorry, invalid command");
+                        System.out.println("Please enter a valid option");
+                    }
                 }
-
-
-
-
             }
-            if(sendMessage)
-            {
-                //sending the message
-                byte buffer[] = message.getBytes();
-                DatagramPacket requestedPacket = new DatagramPacket(buffer, buffer.length,serverHost,CAOService.SERVER_PORT);
-                clientSocket.send(requestedPacket);
-                System.out.println("Message sent");
-
-                //wait to receive a response
-                byte[] responseBuffer = new byte[CAOService.MAX_LEN];
-                DatagramPacket responsePacket = new DatagramPacket(responseBuffer, requestedPacket.getLength());
-
-                //Receives a response
-                clientSocket.receive(responsePacket);
-                String data = new String(responsePacket.getData());
-                System.out.println("RESPONSE: "+ data.trim()+".\n");
-
-            }
-
+            System.out.println("Thanks for using the TCP ComboService");
+            dataSocket.close();
         }
         catch (UnknownHostException e)
         {
@@ -105,14 +119,6 @@ public class CAOClient
         {
             ioException.printStackTrace();
         }
-        finally
-        {
-            if(clientSocket != null)
-            {
-                clientSocket.close();
-            }
-        }
-
     }
 
     //@TODO Need to allow someone to log in
@@ -165,7 +171,6 @@ public class CAOClient
         {
             System.out.println(Colours.RED+"The information provided was invalid"+Colours.RESET);
         }
-        // UNCOMMENT THIS IF LOGGED IN ::: loggedIntoAccount = true;
     }
 
     //this allows the the logged in menu to be displayed and used
@@ -182,6 +187,7 @@ public class CAOClient
 
             switch (loggedInMenu)
             {
+                //TODO add in CAOService options here
                 case LOGOUT:
                     loggedIntoAccount = false;
                     break;
@@ -198,7 +204,6 @@ public class CAOClient
                     //login(keyboard,loggedIntoAccount);
                     break;
                 case QUIT:
-                    sendMessage = false; //is this not a duplication of logging out??? ask john
                     System.out.println("You have logged out of the System");
                     break;
                 default:
@@ -218,7 +223,7 @@ public class CAOClient
         System.out.print("Please enter your option here:");
     }
 
-    //@TODO Need to allow a student to be registered
+    //@TODO Need to allow a student to be registered make this a student and return them
     private static void registerStudent(Scanner keyboard)
     {
         //register a student here
@@ -251,40 +256,17 @@ public class CAOClient
         //Validating all the information
         //check CAO number
         //@TODO maybe make this a single if statement in the future
-        if(CAOMatcher.matches())
+        if(CAOMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches() && emailMatcher.matches())
         {
-            if(DOBMatcher.matches())
-            {
-                //check the password
-                if(passwordMatcher.matches())
-                {
-                    //check the email
-                    if(emailMatcher.matches())
-                    {
-                        //creates the student and call the add method
-                        //Student studentToRegister = new Student(caoNumber, DOB, password, email);
-                        //System.out.println("Made it");
-                        //studentManager.addStudent(studentToRegister);
-                        //@TODO this student needs to be added to a data base
-                    }
-                    else
-                    {
-                        System.out.println(Colours.RED+"This is not a valid email\n"+Colours.RESET);
-                    }
-                }
-                else
-                {
-                    System.out.println(Colours.RED+"This is not a valid password\n"+Colours.RESET);
-                }
-            }
-            else
-            {
-                System.out.println(Colours.RED+"This is not a valid date of birth\n"+Colours.RESET);
-            }
+            //creates the student and call the add method
+            //Student studentToRegister = new Student(caoNumber, DOB, password, email);
+            //System.out.println("Made it");
+            //studentManager.addStudent(studentToRegister);
+            //@TODO this student needs to be added to a data base
         }
         else
         {
-            System.out.println(Colours.RED+"This is not a valid CAO number\n"+Colours.RESET);
+            System.out.println(Colours.RED+"Incorrect details for the account"+Colours.RESET);
         }
     }
 
