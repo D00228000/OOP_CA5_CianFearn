@@ -145,6 +145,7 @@ public class CAOClient
         Pattern passwordPattern = Pattern.compile(RegexChecker.passwordRegex);
         Matcher passwordMatcher = passwordPattern.matcher(password);
 
+        //add a while loop here
         if(CAOMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches())
         {
             boolean studentExists = true; // true by default check id, password, and DOB
