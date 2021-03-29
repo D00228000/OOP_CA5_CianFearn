@@ -6,6 +6,7 @@ package com.dkit.oopca5.server;
  */
 
 import com.dkit.oopca5.core.CAOService;
+import com.dkit.oopca5.core.Student;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -15,6 +16,7 @@ import java.util.Scanner;
 
 public class CAOServer
 {
+
     public static void main(String[] args)
     {
         try
@@ -57,6 +59,7 @@ public class CAOServer
                     }
                     else if(messageComponents[0].equalsIgnoreCase(CAOService.ATTEMPT_LOGIN))
                     {
+                        //getLogin();
                         response = CAOService.SUCCESSFUL_LOGIN;
                     }
                     else if(messageComponents[0].equalsIgnoreCase(CAOService.LOG_OUT))
@@ -101,5 +104,7 @@ public class CAOServer
         }
 
     }
+
+
 }
 

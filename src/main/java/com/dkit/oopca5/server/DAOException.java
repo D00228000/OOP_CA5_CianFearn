@@ -1,4 +1,17 @@
 package com.dkit.oopca5.server;
 
-public class DAOException {
+import java.sql.SQLDataException;
+
+public class DAOException extends SQLDataException
+{
+    public DAOException()
+    {
+
+    }
+
+    public DAOException(String aMessage)
+    {
+        super(aMessage);
+    }
+
 }

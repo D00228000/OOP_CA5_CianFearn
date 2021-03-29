@@ -9,6 +9,9 @@ package com.dkit.oopca5.client;
 import com.dkit.oopca5.core.CAOService;
 import com.dkit.oopca5.core.Colours;
 import com.dkit.oopca5.core.Student;
+import com.dkit.oopca5.server.DAOException;
+import com.dkit.oopca5.server.IStudentDAOInterface;
+import com.dkit.oopca5.server.MySqlStudentDAO;
 
 import java.io.*;
 import java.net.*;
@@ -70,12 +73,12 @@ public class CAOClient
                             }
                             break;
                         case LOGIN:
-                            login(keyboard,loggedIntoAccount);
                             message = CAOService.ATTEMPT_LOGIN;
                             output.println(message);
                             output.flush();
-
                             response = input.nextLine();
+                            login(keyboard,loggedIntoAccount, dataSocket,output);
+
 
 
 
@@ -120,7 +123,7 @@ public class CAOClient
     }
 
     //@TODO Need to allow someone to log in
-    private static void login(Scanner keyboard, boolean loggedIntoAccount)
+    private static void login(Scanner keyboard, boolean loggedIntoAccount, Socket dataSocket, PrintWriter output)
     {
         //a person enters their cao number, date of birth and password
         System.out.println("Please enter your CAO number (8 characters long)");
@@ -144,15 +147,36 @@ public class CAOClient
         Pattern passwordPattern = Pattern.compile(RegexChecker.passwordRegex);
         Matcher passwordMatcher = passwordPattern.matcher(password);
 
-        //add a while loop here
+        //checks that the info matches the patterns
         if(CAOMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches())
         {
             boolean studentExists = true; // true by default check id, password, and DOB
 
             //@TODO this needs to be checked by comparing the database to the entered information
-            //if successful go to another menu
 
-            //create a login request statement
+            //send a new message
+//            String message = caoNumber+CAOService.BREAKING_CHARACTER+DOB+CAOService.BREAKING_CHARACTER+password+CAOService.BREAKING_CHARACTER;
+//            output.println(message);
+//            output.flush();
+
+            //TODO change this
+            IStudentDAOInterface iStudentDAO = new MySqlStudentDAO();
+
+            try
+            {
+                iStudentDAO.findStudentCAO(caoNumber,DOB,password);
+            }
+            catch (DAOException e)
+            {
+                System.out.println("DAO Exception "+e.getMessage());
+            }
+
+
+            //check the login request statement to check for the student details
+
+
+
+
 
             //compare the values of the student table information
             //if true change the "loggedIntoAccount" to true
