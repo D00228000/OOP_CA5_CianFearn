@@ -47,37 +47,43 @@ public class CAOServer
 
                     String[] messageComponents = incomingMessage.split(CAOService.BREAKING_CHARACTER);
 
-                    //create a response
-                    if (messageComponents[0].equalsIgnoreCase(CAOService.REGISTER_COMMAND))
+                    if(messageComponents[0].equalsIgnoreCase(CAOService.END_SESSION))
                     {
-                        //example response
-                        //response = data.replace("echo"+ComboServiceDetails.breakCharacters,"");
-                            //create proper responses with database connection response
+                        response = "Quit";
                     }
-                    else if (messageComponents[0].equalsIgnoreCase("LOGIN"))
+                    else if (messageComponents[0].equalsIgnoreCase(CAOService.REGISTER_COMMAND))
                     {
+                       response = CAOService.SUCCESSFUL_REGISTER;
+                    }
+                    else if(messageComponents[0].equalsIgnoreCase(CAOService.ATTEMPT_LOGIN))
+                    {
+                        response = CAOService.SUCCESSFUL_LOGIN;
+                    }
+                    else if(messageComponents[0].equalsIgnoreCase(CAOService.LOG_OUT))
+                    {
+                        response = "LOGGED OUT";
+                    }
+                    else if(messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_COURSE))
+                    {
+                        response = "DISPLAY COURSE";
+                    }
+                    else if(messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_ALL_COURSES))
+                    {
+                        response = "DISPLAY ALL COURSES";
+                    }
+                    else if(messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_CURRENT_CHOICES))
+                    {
+                        response = "DISPLAY CURRENT CHOICES";
+                    }
+                    else if(messageComponents[0].equalsIgnoreCase(CAOService.UPDATE_CURRENT_CHOICES))
+                    {
+                        response = "UPDATE CURRENT CHOICES";
+                    }
+                    else
+                    {
+                        response = CAOService.UNKNOWN;
+                    }
 
-                    }
-                    else if (messageComponents[0].equalsIgnoreCase("LOGOUT"))
-                    {
-
-                    }
-                    else if (messageComponents[0].equalsIgnoreCase("DISPLAY COURSE"))
-                    {
-
-                    }
-                    else if (messageComponents[0].equalsIgnoreCase("DISPLAY CURRENT"))
-                    {
-
-                    }
-                    else if (messageComponents[0].equalsIgnoreCase("DISPLAY_ALL"))
-                    {
-
-                    }
-                    else if (messageComponents[0].equalsIgnoreCase("UPDATE CURRENT"))
-                    {
-
-                    }
                     output.println(response);
                     output.flush();
                 }
@@ -92,9 +98,6 @@ public class CAOServer
         catch (NoSuchElementException e)
         {
             System.out.println("A client has disconnected from the server");
-            //dataSocket.close();
-            //listeningSocket.close();
-            //System.exit(1);
         }
 
     }

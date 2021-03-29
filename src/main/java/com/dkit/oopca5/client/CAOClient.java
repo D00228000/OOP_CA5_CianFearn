@@ -37,14 +37,17 @@ public class CAOClient
 
             while(!message.equals(CAOService.END_SESSION))//maybe remove this while loop as its an infinite loop in another infinite loop
             {
-                //display initial menu
-                displayInitialMenu();
-                String response = "";
 
                 //allow for input and other options
                 InitialMenuChoices initialMenuChoices = InitialMenuChoices.CONTINUE;
                 while (initialMenuChoices != InitialMenuChoices.QUIT)//change while to an if because already in a while loop
                 {
+                    //display initial menu
+                    displayInitialMenu();
+                    String response = "";
+                    //checks if the log in is true
+
+
                     initialMenuChoices = InitialMenuChoices.values()[Integer.parseInt(keyboard.nextLine().trim())];
                     System.out.println();
 
@@ -59,11 +62,11 @@ public class CAOClient
                             response = input.nextLine();
                             if(response.equals(CAOService.SUCCESSFUL_REGISTER))
                             {
-                                System.out.println("The student has been registered");
+                                System.out.println("The student has been registered\n");
                             }
                             else
                             {
-                                System.out.println("The student has not been registered");
+                                System.out.println("The student has not been registered\n");
                             }
                             break;
                         case LOGIN:
@@ -73,14 +76,9 @@ public class CAOClient
                             output.flush();
 
                             response = input.nextLine();
-                            if(response.equals(CAOService.SUCCESSFUL_LOGIN))
-                            {
-                                System.out.println("You have logged in");
-                            }
-                            else if(response.equals(CAOService.FAILED_LOGIN))
-                            {
-                                System.out.println("Incorrect login details. Try again");
-                            }
+
+
+
                             break;
                         case QUIT:
                             message = CAOService.END_SESSION;
@@ -100,7 +98,7 @@ public class CAOClient
                     if(response.equals(CAOService.UNKNOWN))
                     {
                         System.out.println("Sorry, invalid command");
-                        System.out.println("Please enter a valid option");
+                        System.out.println("Please enter a valid option\n");
                     }
                 }
             }
@@ -140,7 +138,8 @@ public class CAOClient
         Matcher DOBMatcher = DOBPattern.matcher(DOB);
 
         System.out.println("Please enter your password (8-16 characters)");
-        String password = keyboard.nextLine();
+        String password = keyboard.next();
+        keyboard.nextLine();
 
         Pattern passwordPattern = Pattern.compile(RegexChecker.passwordRegex);
         Matcher passwordMatcher = passwordPattern.matcher(password);
@@ -165,7 +164,12 @@ public class CAOClient
             }
             if(loggedIntoAccount)
             {
+                System.out.println("You have logged in");
                 loggedInMenuSystem(keyboard);
+            }
+            else
+            {
+                System.out.println("Incorrect login details. Try again");
             }
         }
         else
@@ -186,26 +190,32 @@ public class CAOClient
             loggedInMenu = LoggedInMenu.values()[Integer.parseInt(keyboard.nextLine().trim())];
             System.out.println();
 
+            String message = "";
+
             switch (loggedInMenu)
             {
-                //TODO add in CAOService options here
+                //TODO add in CAOService options here REMOVE THE QUIT OPTION FROM HERE CAUSES AN ISSUE
                 case LOGOUT:
+                    System.out.println("You have logged out of the System\n");
                     loggedIntoAccount = false;
+                    message = CAOService.LOG_OUT;
+                    loggedInMenu = loggedInMenu.QUIT;
                     break;
                 case DISPLAY_COURSE:
                     //login(keyboard,loggedIntoAccount);
+                    message = CAOService.DISPLAY_COURSE;
                     break;
                 case DISPLAY_ALL_COURSES:
                     //login(keyboard,loggedIntoAccount);
+                    message = CAOService.DISPLAY_ALL_COURSES;
                     break;
                 case DISPLAY_CURRENT_CHOICES:
                     //login(keyboard,loggedIntoAccount);
+                    message = CAOService.DISPLAY_CURRENT_CHOICES;
                     break;
                 case UPDATE_CURRENT_CHOICES:
                     //login(keyboard,loggedIntoAccount);
-                    break;
-                case QUIT:
-                    System.out.println("You have logged out of the System");
+                    message = CAOService.UPDATE_CURRENT_CHOICES;
                     break;
                 default:
                     System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
@@ -215,12 +225,11 @@ public class CAOClient
 
     private static void displayTheLoggedInMenu()
     {
-        System.out.println("0: QUIT");
-        System.out.println("1: Logout");
-        System.out.println("2: Display a course");
-        System.out.println("3: Display all courses");
-        System.out.println("4: Display current choices");
-        System.out.println("5: Update current choices");
+        System.out.println("\n0: Logout");
+        System.out.println("1: Display a course");
+        System.out.println("2: Display all courses");
+        System.out.println("3: Display current choices");
+        System.out.println("4: Update current choices");
         System.out.print("Please enter your option here:");
     }
 
