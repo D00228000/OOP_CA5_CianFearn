@@ -22,6 +22,7 @@ public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
         try
         {
             connection = this.getConnection();
+            //note an issue with this sql statement
             String query = "select cao_number,dob,password from student where cao_number = "+caoNumber+" and dob = "+DOB+" and password = "+password+";";
             ps = connection.prepareStatement(query);
             rs = ps.executeQuery();

@@ -168,7 +168,7 @@ public class CAOClient
             }
             catch (DAOException e)
             {
-                System.out.println("DAO Exception "+e.getMessage());
+                System.out.println("DAO Exception in CAOClient "+e.getMessage());
             }
 
 
