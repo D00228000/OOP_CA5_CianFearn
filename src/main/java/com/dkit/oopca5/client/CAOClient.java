@@ -77,7 +77,7 @@ public class CAOClient
                             output.println(message);
                             output.flush();
                             response = input.nextLine();
-                            login(keyboard,loggedIntoAccount, dataSocket,output);
+                            login(keyboard,loggedIntoAccount,output);
 
 
 
@@ -123,7 +123,7 @@ public class CAOClient
     }
 
     //@TODO Need to allow someone to log in
-    private static void login(Scanner keyboard, boolean loggedIntoAccount, Socket dataSocket, PrintWriter output)
+    private static void login(Scanner keyboard, boolean loggedIntoAccount, PrintWriter output)
     {
         //a person enters their cao number, date of birth and password
         System.out.println("Please enter your CAO number (8 characters long)");
@@ -159,7 +159,7 @@ public class CAOClient
 //            output.println(message);
 //            output.flush();
 
-            //TODO change this
+            //TODO change this add validation
             IStudentDAOInterface iStudentDAO = new MySqlStudentDAO();
 
             try
@@ -189,7 +189,7 @@ public class CAOClient
             if(loggedIntoAccount)
             {
                 System.out.println("You have logged in");
-                loggedInMenuSystem(keyboard);
+                loggedInMenuSystem(keyboard, output);
             }
             else
             {
@@ -203,7 +203,7 @@ public class CAOClient
     }
 
     //this allows the the logged in menu to be displayed and used
-    private static void loggedInMenuSystem(Scanner keyboard)
+    private static void loggedInMenuSystem(Scanner keyboard, PrintWriter output)
     {
         //allow for input and other options
         LoggedInMenu loggedInMenu = LoggedInMenu.CONTINUE;
@@ -218,28 +218,41 @@ public class CAOClient
 
             switch (loggedInMenu)
             {
-                //TODO add in CAOService options here REMOVE THE QUIT OPTION FROM HERE CAUSES AN ISSUE
+                //TODO ADD IN NEW METHODS FOR FUNCTIONALITY
                 case LOGOUT:
                     System.out.println("You have logged out of the System\n");
                     loggedIntoAccount = false;
                     message = CAOService.LOG_OUT;
+                    output.println(message);
+                    output.flush();
+
+                    //response = input.nextLine();
+
                     loggedInMenu = loggedInMenu.QUIT;
                     break;
                 case DISPLAY_COURSE:
                     //login(keyboard,loggedIntoAccount);
                     message = CAOService.DISPLAY_COURSE;
+                    output.println(message);
+                    output.flush();
                     break;
                 case DISPLAY_ALL_COURSES:
                     //login(keyboard,loggedIntoAccount);
                     message = CAOService.DISPLAY_ALL_COURSES;
+                    output.println(message);
+                    output.flush();
                     break;
                 case DISPLAY_CURRENT_CHOICES:
                     //login(keyboard,loggedIntoAccount);
                     message = CAOService.DISPLAY_CURRENT_CHOICES;
+                    output.println(message);
+                    output.flush();
                     break;
                 case UPDATE_CURRENT_CHOICES:
                     //login(keyboard,loggedIntoAccount);
                     message = CAOService.UPDATE_CURRENT_CHOICES;
+                    output.println(message);
+                    output.flush();
                     break;
                 default:
                     System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
