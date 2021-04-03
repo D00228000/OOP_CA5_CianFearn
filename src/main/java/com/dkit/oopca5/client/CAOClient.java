@@ -67,7 +67,7 @@ public class CAOClient
                                 {
                                     System.out.println("The student has been registered\n");
                                 }
-                                else
+                                else if(response.equals(CAOService.FAILED_REGISTER))
                                 {
                                     System.out.println("The student has not been registered\n");
                                 }
@@ -229,42 +229,49 @@ public class CAOClient
 
                 switch (loggedInMenu)
                 {
-                    //TODO ADD IN NEW METHODS FOR FUNCTIONALITY
+                    //TODO fix methods. currently have loop issues or skips over code
                     case LOGOUT:
                         System.out.println("You have logged out of the System\n");
                         loggedIntoAccount = false;
                         message = CAOService.LOG_OUT;
                         output.println(message);
                         output.flush();
-
-                        response = input.nextLine();
-
                         loggedInMenu = loggedInMenu.QUIT;
                         break;
                     case DISPLAY_COURSE:
+                        //displayCertainCourse(output);
                         message = CAOService.DISPLAY_COURSE;
                         output.println(message);
                         output.flush();
                         response = input.nextLine();
+                        System.out.println(response);
                         break;
                     case DISPLAY_ALL_COURSES:
                         message = CAOService.DISPLAY_ALL_COURSES;
                         output.println(message);
                         output.flush();
                         response = input.nextLine();
+                        //@TODO try to fix how this is displayed
+                        System.out.println(response);//printing out the responses
                         break;
                     case DISPLAY_CURRENT_CHOICES:
                         message = CAOService.DISPLAY_CURRENT_CHOICES;
                         output.println(message);
                         output.flush();
-                        response = input.nextLine();
+                        displayCurrentChoices(response);
+                        //response = input.nextLine();
+
+                        System.out.println(response);
                         break;
                     case UPDATE_CURRENT_CHOICES:
                         //login(keyboard,loggedIntoAccount);
                         message = CAOService.UPDATE_CURRENT_CHOICES;
                         output.println(message);
                         output.flush();
+                        updateCurrentChoices();
+                        //@TODO may need to remove this response
                         response = input.nextLine();
+                        System.out.println(response);
                         break;
                     default:
                         System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
@@ -291,6 +298,25 @@ public class CAOClient
 
         }
     }
+
+    private static void displayCertainCourse(PrintWriter output)
+    {
+        Scanner keyboard = new Scanner(System.in);
+        System.out.print("Please enter a course id here:");
+        String courseIDtoFind = keyboard.nextLine();
+
+        String message = CAOService.DISPLAY_COURSE+CAOService.BREAKING_CHARACTER+courseIDtoFind;
+        output.println(message);
+        output.flush();
+    }
+
+    private static String displayCurrentChoices(String response) {
+        return null;
+    }
+
+    private static void updateCurrentChoices() {
+    }
+
 
     private static void displayTheLoggedInMenu()
     {

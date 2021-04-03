@@ -5,6 +5,8 @@ The CAOClientHandler will run as a thread. It should listen for messages from th
  */
 
 import com.dkit.oopca5.core.CAOService;
+import com.dkit.oopca5.core.Course;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -40,6 +42,8 @@ public class CAOClientHandler extends Thread
         //custom run method
         String incomingMessage = "";
         String response = "";
+        String sendBackToClient = "";
+        ICourseDAOInterface courseDAOInterface = new MySqlCourseDAO();
 
         try
         {
@@ -53,6 +57,7 @@ public class CAOClientHandler extends Thread
 
                 String[] messageComponents = incomingMessage.split(CAOService.BREAKING_CHARACTER);
 
+                //TODO add the functionality methods here the interfaces
                 if (messageComponents[0].equalsIgnoreCase(CAOService.END_SESSION))
                 {
                     response = "Quit";
@@ -72,11 +77,15 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_COURSE))
                 {
-                    response = "DISPLAY COURSE";
+                    //String enteredCourseID = messageComponents[1];
+                    response = courseDAOInterface.findCertainCourse(messageComponents[1]).toString();
+
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_ALL_COURSES))
                 {
-                    response = "DISPLAY ALL COURSES";
+                    //@TODO need to fix this
+                    //display the courses contact the database
+                    response = courseDAOInterface.findAllCourses().toString();
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_CURRENT_CHOICES))
                 {
@@ -90,12 +99,16 @@ public class CAOClientHandler extends Thread
                 {
                     response = CAOService.UNKNOWN;
                 }
-                //Gives out response
                 output.println(response);
                 output.flush();
+                //sends information back to the client
             }
         }
         catch (NoSuchElementException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch (DAOException e)
         {
             System.out.println(e.getMessage());
         }

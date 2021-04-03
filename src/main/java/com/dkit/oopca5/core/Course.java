@@ -62,6 +62,6 @@ public class Course
 
     @Override
     public String toString() {
-        return   courseId +", "+ level + ", " + title+ ", " + institution+"\n";
+        return   courseId +", "+ level + ", " + title+ ", " + institution;
     }
 }
