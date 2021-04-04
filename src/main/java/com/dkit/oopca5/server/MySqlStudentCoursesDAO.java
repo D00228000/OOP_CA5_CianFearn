@@ -9,11 +9,12 @@ import java.sql.SQLException;
 public class MySqlStudentCoursesDAO extends MySqlDAO implements IStudentCoursesDAOInterface
 {
     //TODO need to create a variable that remembers who is logged in the client class
-    public void findCertainStudentsChoices(int caoNumber) throws DAOException
+    public String findCertainStudentsChoices(int caoNumber) throws DAOException
     {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        String dbCourseID = "";
 
         try
         {
@@ -25,7 +26,7 @@ public class MySqlStudentCoursesDAO extends MySqlDAO implements IStudentCoursesD
             System.out.println("Your courses are the following");
             while (rs.next())
             {
-                String dbCourseID = rs.getString("course_id");
+                dbCourseID = rs.getString("course_id");
                 System.out.println(dbCourseID);
             }
         }
@@ -55,5 +56,6 @@ public class MySqlStudentCoursesDAO extends MySqlDAO implements IStudentCoursesD
                 throw new DAOException("findCertainStudentsChoices final "+e.getMessage());
             }
         }
+        return dbCourseID;
     }
 }

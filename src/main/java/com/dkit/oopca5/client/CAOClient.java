@@ -15,6 +15,7 @@ import com.dkit.oopca5.server.MySqlStudentDAO;
 
 import java.io.*;
 import java.net.*;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +41,6 @@ public class CAOClient
 
             while(!message.equals(CAOService.END_SESSION))//maybe remove this while loop as its an infinite loop in another infinite loop
             {
-
                 //allow for input and other options
                 InitialMenuChoices initialMenuChoices = InitialMenuChoices.CONTINUE;
                 while (initialMenuChoices != InitialMenuChoices.QUIT)//change while to an if because already in a while loop
@@ -48,60 +48,69 @@ public class CAOClient
                     //display initial menu
                     displayInitialMenu();
                     String response = "";
-                    //checks if the log in is true
 
-
-                    initialMenuChoices = InitialMenuChoices.values()[Integer.parseInt(keyboard.nextLine().trim())];
-                    System.out.println();
-
-                    switch (initialMenuChoices)
+                    try
                     {
-                        case REGISTER:
-                            registerStudent(keyboard);
-                            message = CAOService.REGISTER_COMMAND;
-                            output.println(message);
-                            output.flush();
+                        initialMenuChoices = InitialMenuChoices.values()[Integer.parseInt(keyboard.nextLine().trim())];
+                        System.out.println();
 
-                            response = input.nextLine();
-                            if(response.equals(CAOService.SUCCESSFUL_REGISTER))
-                            {
-                                System.out.println("The student has been registered\n");
-                            }
-                            else
-                            {
-                                System.out.println("The student has not been registered\n");
-                            }
-                            break;
-                        case LOGIN:
-                            message = CAOService.ATTEMPT_LOGIN;
-                            output.println(message);
-                            output.flush();
-                            response = input.nextLine();
-                            login(keyboard,loggedIntoAccount,output);
+                        switch (initialMenuChoices)
+                        {
+                            case REGISTER:
+                                registerStudent(keyboard);
+                                message = CAOService.REGISTER_COMMAND;
+                                output.println(message);
+                                output.flush();
 
+                                response = input.nextLine();
+                                if(response.equals(CAOService.SUCCESSFUL_REGISTER))
+                                {
+                                    System.out.println("The student has been registered\n");
+                                }
+                                else if(response.equals(CAOService.FAILED_REGISTER))
+                                {
+                                    System.out.println("The student has not been registered\n");
+                                }
+                                break;
+                            case LOGIN:
+                                message = CAOService.ATTEMPT_LOGIN;
+                                output.println(message);
+                                output.flush();
+                                response = input.nextLine();
+                                login(keyboard,loggedIntoAccount,output,input,response);
+                                break;
+                            case QUIT:
+                                message = CAOService.END_SESSION;
+                                output.println(message);
+                                output.flush();
 
-
-
-                            break;
-                        case QUIT:
-                            message = CAOService.END_SESSION;
-                            output.println(message);
-                            output.flush();
-
-                            //Listen for a response
-                            response = input.nextLine();
-                            if(response.equals(CAOService.SESSION_TERMINATED))
-                            {
-                                System.out.println("Session has been terminated");
-                            }
-                            break;
-                        default:
-                            System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
+                                //Listen for a response
+                                response = input.nextLine();
+                                if(response.equals(CAOService.SESSION_TERMINATED))
+                                {
+                                    System.out.println("Session has been terminated");
+                                }
+                                break;
+                            default:
+                                System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
+                        }
+                        if(response.equals(CAOService.UNKNOWN))
+                        {
+                            System.out.println("Sorry, invalid command");
+                            System.out.println("Please enter a valid option\n");
+                        }
                     }
-                    if(response.equals(CAOService.UNKNOWN))
+                    catch(NoSuchElementException e)
                     {
-                        System.out.println("Sorry, invalid command");
-                        System.out.println("Please enter a valid option\n");
+                        System.out.println(Colours.RED+"Selection out of range. Try again:"+Colours.RESET+"\n");
+                    }
+                    catch (ArrayIndexOutOfBoundsException e)
+                    {
+                        System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
+                    }
+                    catch (NumberFormatException e)
+                    {
+                        System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
                     }
                 }
             }
@@ -123,7 +132,7 @@ public class CAOClient
     }
 
     //@TODO Need to allow someone to log in
-    private static void login(Scanner keyboard, boolean loggedIntoAccount, PrintWriter output)
+    private static void login(Scanner keyboard, boolean loggedIntoAccount, PrintWriter output, Scanner input, String response)
     {
         //a person enters their cao number, date of birth and password
         System.out.println("Please enter your CAO number (8 characters long)");
@@ -189,7 +198,7 @@ public class CAOClient
             if(loggedIntoAccount)
             {
                 System.out.println("You have logged in");
-                loggedInMenuSystem(keyboard, output);
+                loggedInMenuSystem(keyboard, output,input,response);
             }
             else
             {
@@ -203,7 +212,7 @@ public class CAOClient
     }
 
     //this allows the the logged in menu to be displayed and used
-    private static void loggedInMenuSystem(Scanner keyboard, PrintWriter output)
+    private static void loggedInMenuSystem(Scanner keyboard, PrintWriter output, Scanner input, String response)
     {
         //allow for input and other options
         LoggedInMenu loggedInMenu = LoggedInMenu.CONTINUE;
@@ -211,54 +220,103 @@ public class CAOClient
         {
             //display initial menu
             displayTheLoggedInMenu();
-            loggedInMenu = LoggedInMenu.values()[Integer.parseInt(keyboard.nextLine().trim())];
-            System.out.println();
-
             String message = "";
 
-            switch (loggedInMenu)
+            try
             {
-                //TODO ADD IN NEW METHODS FOR FUNCTIONALITY
-                case LOGOUT:
-                    System.out.println("You have logged out of the System\n");
-                    loggedIntoAccount = false;
-                    message = CAOService.LOG_OUT;
-                    output.println(message);
-                    output.flush();
+                loggedInMenu = LoggedInMenu.values()[Integer.parseInt(keyboard.nextLine().trim())];
+                //System.out.println();
 
-                    //response = input.nextLine();
+                switch (loggedInMenu)
+                {
+                    //TODO fix methods. currently have loop issues or skips over code
+                    case LOGOUT:
+                        System.out.println("You have logged out of the System\n");
+                        loggedIntoAccount = false;
+                        message = CAOService.LOG_OUT;
+                        output.println(message);
+                        output.flush();
+                        loggedInMenu = loggedInMenu.QUIT;
+                        break;
+                    case DISPLAY_COURSE:
+                        //displayCertainCourse(output);
+                        message = CAOService.DISPLAY_COURSE;
+                        output.println(message);
+                        output.flush();
+                        response = input.nextLine();
+                        System.out.println(response);
+                        break;
+                    case DISPLAY_ALL_COURSES:
+                        message = CAOService.DISPLAY_ALL_COURSES;
+                        output.println(message);
+                        output.flush();
+                        response = input.nextLine();
+                        //@TODO try to fix how this is displayed
+                        System.out.println(response);//printing out the responses
+                        break;
+                    case DISPLAY_CURRENT_CHOICES:
+                        message = CAOService.DISPLAY_CURRENT_CHOICES;
+                        output.println(message);
+                        output.flush();
+                        displayCurrentChoices(response);
+                        //response = input.nextLine();
 
-                    loggedInMenu = loggedInMenu.QUIT;
-                    break;
-                case DISPLAY_COURSE:
-                    //login(keyboard,loggedIntoAccount);
-                    message = CAOService.DISPLAY_COURSE;
-                    output.println(message);
-                    output.flush();
-                    break;
-                case DISPLAY_ALL_COURSES:
-                    //login(keyboard,loggedIntoAccount);
-                    message = CAOService.DISPLAY_ALL_COURSES;
-                    output.println(message);
-                    output.flush();
-                    break;
-                case DISPLAY_CURRENT_CHOICES:
-                    //login(keyboard,loggedIntoAccount);
-                    message = CAOService.DISPLAY_CURRENT_CHOICES;
-                    output.println(message);
-                    output.flush();
-                    break;
-                case UPDATE_CURRENT_CHOICES:
-                    //login(keyboard,loggedIntoAccount);
-                    message = CAOService.UPDATE_CURRENT_CHOICES;
-                    output.println(message);
-                    output.flush();
-                    break;
-                default:
-                    System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
+                        System.out.println(response);
+                        break;
+                    case UPDATE_CURRENT_CHOICES:
+                        //login(keyboard,loggedIntoAccount);
+                        message = CAOService.UPDATE_CURRENT_CHOICES;
+                        output.println(message);
+                        output.flush();
+                        updateCurrentChoices();
+                        //@TODO may need to remove this response
+                        response = input.nextLine();
+                        System.out.println(response);
+                        break;
+                    default:
+                        System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
+                }
+                if(response.equals(CAOService.UNKNOWN))
+                {
+                    System.out.println("Sorry, invalid command");
+                    System.out.println("Please enter a valid option\n");
+                }
             }
+            catch(NoSuchElementException e)
+            {
+                System.out.println(Colours.RED+"Selection out of range. Try again:"+Colours.RESET+"\n");
+            }
+            catch (ArrayIndexOutOfBoundsException e)
+            {
+                System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
+            }
+            catch (NumberFormatException e)
+            {
+                System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
+            }
+
+
         }
     }
+
+    private static void displayCertainCourse(PrintWriter output)
+    {
+        Scanner keyboard = new Scanner(System.in);
+        System.out.print("Please enter a course id here:");
+        String courseIDtoFind = keyboard.nextLine();
+
+        String message = CAOService.DISPLAY_COURSE+CAOService.BREAKING_CHARACTER+courseIDtoFind;
+        output.println(message);
+        output.flush();
+    }
+
+    private static String displayCurrentChoices(String response) {
+        return null;
+    }
+
+    private static void updateCurrentChoices() {
+    }
+
 
     private static void displayTheLoggedInMenu()
     {

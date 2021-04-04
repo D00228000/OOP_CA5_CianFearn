@@ -23,7 +23,7 @@ public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
         {
             connection = this.getConnection();
             //note an issue with this sql statement
-            String query = "select cao_number, dob, password from student where cao_number = "+caoNumber+" and dob = "+DOB+" and password = "+password+";";
+            String query = "select cao_number, dob, password from student where cao_number = "+caoNumber+" and dob = \""+DOB+"\" and password = \""+password+"\";";
             //              select cao_number, dob, password from student where cao_number = 12345678 and dob = "2001-06-04" and password = "testpassword";
             ps = connection.prepareStatement(query);
             rs = ps.executeQuery();
@@ -33,10 +33,8 @@ public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
                 int CAOID = rs.getInt("cao_number");
                 String DateOfBirth = rs.getString("dob");
                 String dbPassword = rs.getString("password");
-
-                //TODO need to edit
-                String defaultEmail = "defaultEmail@gmail.com";
-                returnedStudent = new Student(CAOID,DateOfBirth,dbPassword,defaultEmail);
+                String dbEmail = rs.getString("email");
+                returnedStudent = new Student(CAOID,DateOfBirth,dbPassword,dbEmail);
             }
         }
         catch (SQLException e)
