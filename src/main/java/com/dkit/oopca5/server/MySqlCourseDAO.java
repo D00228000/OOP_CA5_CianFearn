@@ -78,7 +78,7 @@ public class MySqlCourseDAO extends MySqlDAO implements ICourseDAOInterface
         try
         {
             connection = this.getConnection();
-            String query = "select * from course where course_id = "+courseID;
+            String query = "select * from course where course_id = \""+courseID+"\";";
             ps = connection.prepareStatement(query);
             rs = ps.executeQuery();
 

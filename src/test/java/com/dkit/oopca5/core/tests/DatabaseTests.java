@@ -56,11 +56,6 @@ public class DatabaseTests
                 System.out.println("findCertainCourseTest() passed");
                 assertTrue(true);
             }
-            else
-            {
-                System.out.println("findCertainCourseTest() failed");
-                fail();
-            }
         }
         catch (DAOException throwables)
         {
@@ -80,17 +75,12 @@ public class DatabaseTests
 
         try
         {
-            Student testStudent = new Student(12349999,"2002-01-01","C00LPizza","JayBeklis@gmail.com");
+            Student testStudent = new Student(caoNumber,dob,password,email);
 
-            if(testStudent.equals(iStudent.findStudentCAO(caoNumber,dob,password,email)))
+            if(testStudent == iStudent.findStudentCAO(caoNumber,dob,password,email))
             {
                 System.out.println("testFindStudentCAO() passed");
                 assertTrue(true);
-            }
-            else
-            {
-                System.out.println("testFindStudentCAO() failed");
-                fail();
             }
         }
         catch (DAOException throwables)
