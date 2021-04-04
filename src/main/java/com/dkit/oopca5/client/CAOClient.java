@@ -142,6 +142,13 @@ public class CAOClient
         Pattern CAOPattern = Pattern.compile(RegexChecker.CAORegex);
         Matcher CAOMatcher = CAOPattern.matcher(caoNumberAsString);
 
+        System.out.println("Please enter your email");
+        String email = keyboard.next();
+        keyboard.nextLine();
+
+        Pattern emailPattern = Pattern.compile(RegexChecker.emailRegex);
+        Matcher emailMatcher = emailPattern.matcher(email);
+
         System.out.println("Please enter your date of birth (yyyy-mm-dd)");
         String DOB = keyboard.next();
         keyboard.nextLine();
@@ -157,7 +164,7 @@ public class CAOClient
         Matcher passwordMatcher = passwordPattern.matcher(password);
 
         //checks that the info matches the patterns
-        if(CAOMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches())
+        if(CAOMatcher.matches() && emailMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches())
         {
             boolean studentExists = true; // true by default check id, password, and DOB
 
@@ -173,7 +180,7 @@ public class CAOClient
 
             try
             {
-                iStudentDAO.findStudentCAO(caoNumber,DOB,password);
+                iStudentDAO.findStudentCAO(caoNumber,DOB,password,email);
             }
             catch (DAOException e)
             {
@@ -216,7 +223,7 @@ public class CAOClient
     {
         //allow for input and other options
         LoggedInMenu loggedInMenu = LoggedInMenu.CONTINUE;
-        while (loggedInMenu != loggedInMenu.QUIT)
+        while (loggedInMenu != loggedInMenu.LOGOUT)
         {
             //display initial menu
             displayTheLoggedInMenu();
@@ -225,7 +232,7 @@ public class CAOClient
             try
             {
                 loggedInMenu = LoggedInMenu.values()[Integer.parseInt(keyboard.nextLine().trim())];
-                //System.out.println();
+                //keyboard.nextLine();
 
                 switch (loggedInMenu)
                 {
@@ -236,7 +243,8 @@ public class CAOClient
                         message = CAOService.LOG_OUT;
                         output.println(message);
                         output.flush();
-                        loggedInMenu = loggedInMenu.QUIT;
+                        //loggedInMenu = loggedInMenu.QUIT;
+                        loggedInMenu = loggedInMenu.LOGOUT;
                         break;
                     case DISPLAY_COURSE:
                         //displayCertainCourse(output);
@@ -258,8 +266,8 @@ public class CAOClient
                         message = CAOService.DISPLAY_CURRENT_CHOICES;
                         output.println(message);
                         output.flush();
-                        displayCurrentChoices(response);
-                        //response = input.nextLine();
+                        //displayCurrentChoices(response);
+                        response = input.nextLine();
 
                         System.out.println(response);
                         break;
@@ -268,13 +276,13 @@ public class CAOClient
                         message = CAOService.UPDATE_CURRENT_CHOICES;
                         output.println(message);
                         output.flush();
-                        updateCurrentChoices();
+                        //updateCurrentChoices();
                         //@TODO may need to remove this response
                         response = input.nextLine();
                         System.out.println(response);
                         break;
                     default:
-                        System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
+                        System.out.println(Colours.RED+"Selection out of range. Im here Try again"+Colours.RESET);
                 }
                 if(response.equals(CAOService.UNKNOWN))
                 {
@@ -282,20 +290,18 @@ public class CAOClient
                     System.out.println("Please enter a valid option\n");
                 }
             }
+            catch(ArrayIndexOutOfBoundsException e)
+            {
+                System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
+            }
             catch(NoSuchElementException e)
             {
-                System.out.println(Colours.RED+"Selection out of range. Try again:"+Colours.RESET+"\n");
-            }
-            catch (ArrayIndexOutOfBoundsException e)
-            {
-                System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
+                System.out.println(Colours.RED+"Selection out of range. Try again:"+Colours.RESET);
             }
             catch (NumberFormatException e)
             {
-                System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
+                System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
             }
-
-
         }
     }
 

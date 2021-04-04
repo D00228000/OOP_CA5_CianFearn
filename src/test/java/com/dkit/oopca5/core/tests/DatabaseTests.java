@@ -82,7 +82,7 @@ public class DatabaseTests
         {
             Student testStudent = new Student(12349999,"2002-01-01","C00LPizza","JayBeklis@gmail.com");
 
-            if(testStudent.equals(iStudent.findStudentCAO(caoNumber,dob,password)))
+            if(testStudent.equals(iStudent.findStudentCAO(caoNumber,dob,password,email)))
             {
                 System.out.println("testFindStudentCAO() passed");
                 assertTrue(true);

@@ -42,7 +42,6 @@ public class CAOClientHandler extends Thread
         //custom run method
         String incomingMessage = "";
         String response = "";
-        String sendBackToClient = "";
         ICourseDAOInterface courseDAOInterface = new MySqlCourseDAO();
 
         try
@@ -50,7 +49,6 @@ public class CAOClientHandler extends Thread
             //The server should run forever hence use a while
             while (true)
             {
-                response = null;
                 //Take the information from the client
                 incomingMessage = input.nextLine();
                 System.out.println("Received message: " + incomingMessage);
@@ -60,11 +58,11 @@ public class CAOClientHandler extends Thread
                 //TODO add the functionality methods here the interfaces
                 if (messageComponents[0].equalsIgnoreCase(CAOService.END_SESSION))
                 {
-                    response = "Quit";
+                    response = "END SESSION";
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.REGISTER_COMMAND))
                 {
-                    response = CAOService.SUCCESSFUL_REGISTER;
+                    response = CAOService.SUCCESSFUL_REGISTER;//TODO add more to this
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.ATTEMPT_LOGIN))
                 {
@@ -78,8 +76,8 @@ public class CAOClientHandler extends Thread
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_COURSE))
                 {
                     //String enteredCourseID = messageComponents[1];
-                    response = courseDAOInterface.findCertainCourse(messageComponents[1]).toString();
-
+                    //response = courseDAOInterface.findCertainCourse(messageComponents[1]).toString();
+                    response = "DISPLAY COURSE";
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_ALL_COURSES))
                 {
