@@ -15,6 +15,7 @@ public class CAOService
 
 
     public static final String BREAKING_CHARACTER = "%%";
+    public static final String VARIABLE= "$";
     public static final int MAX_LEN = 200;
     public static final String END_SESSION = "QUIT";
     public static final String SESSION_TERMINATED = "GOODBYE";

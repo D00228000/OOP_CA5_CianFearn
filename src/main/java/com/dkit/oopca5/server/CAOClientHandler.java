@@ -6,6 +6,7 @@ The CAOClientHandler will run as a thread. It should listen for messages from th
 
 import com.dkit.oopca5.core.CAOService;
 import com.dkit.oopca5.core.Course;
+import com.dkit.oopca5.core.Student;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,6 +44,7 @@ public class CAOClientHandler extends Thread
         String incomingMessage = "";
         String response = "";
         ICourseDAOInterface courseDAOInterface = new MySqlCourseDAO();
+        IStudentDAOInterface studentDAOInterface = new MySqlStudentDAO();
 
         try
         {
@@ -62,12 +64,42 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.REGISTER_COMMAND))
                 {
-                    response = CAOService.SUCCESSFUL_REGISTER;//TODO add more to this
+
+                    //TODO add more to this
+
+                    response = CAOService.SUCCESSFUL_REGISTER;
+
+                    //create a temporary student object and compare it to what the database returns
+
+                    //courseDAOInterface.findAllCourses().toString();
+                    //need to use an interface to find the student then send back the correct response
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.ATTEMPT_LOGIN))
                 {
+
                     //getLogin();
-                    response = CAOService.SUCCESSFUL_LOGIN;
+                    //need to remove the $
+                    Student studentToCompareWithDatabase = new Student(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
+
+
+                    if(studentToCompareWithDatabase != studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]))
+                    {
+                        System.out.println("THIS WORKS INCORRECTLY");
+
+                        System.out.println("-----------------------------------------");
+                        System.out.println(studentToCompareWithDatabase.toString());
+
+                        System.out.println("-----------------------------------------");
+                        System.out.println(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]));
+                        System.out.println("-----------------------------------------");
+                        response = CAOService.SUCCESSFUL_LOGIN;
+                        //response = CAOService.FAILED_LOGIN;
+                    }
+//                    else if(studentToCompareWithDatabase != studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]))
+//                    {
+//                        response = CAOService.FAILED_LOGIN;
+//                    }
+                    //response = CAOService.SUCCESSFUL_LOGIN;
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.LOG_OUT))
                 {

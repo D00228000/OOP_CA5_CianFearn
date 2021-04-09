@@ -57,8 +57,9 @@ public class CAOClient
                         switch (initialMenuChoices)
                         {
                             case REGISTER:
-                                registerStudent(keyboard);
-                                message = CAOService.REGISTER_COMMAND;
+                                //registerStudent(keyboard);
+                                //@TODO need to register and add to a database
+                                message = CAOService.REGISTER_COMMAND+CAOService.BREAKING_CHARACTER+registerStudent(keyboard);
                                 output.println(message);
                                 output.flush();
 
@@ -73,11 +74,27 @@ public class CAOClient
                                 }
                                 break;
                             case LOGIN:
-                                message = CAOService.ATTEMPT_LOGIN;
+                                message = CAOService.ATTEMPT_LOGIN+login(keyboard);
                                 output.println(message);
                                 output.flush();
                                 response = input.nextLine();
-                                login(keyboard,loggedIntoAccount,output,input,response);
+                                if(response.equals(CAOService.SUCCESSFUL_LOGIN))
+                                {
+                                    loggedIntoAccount = true;
+                                }
+//                                else if(response.equals(CAOService.FAILED_LOGIN))
+//                                {
+//                                    System.out.println(Colours.RED+"You have failed to log in with these credentials"+Colours.RESET);
+//                                }
+
+                                if(loggedIntoAccount)
+
+                                {
+                                    System.out.println("You have logged in");
+                                    loggedInMenuSystem(keyboard, output,input,response);
+                                }
+
+                                //
                                 break;
                             case QUIT:
                                 message = CAOService.END_SESSION;
@@ -132,7 +149,7 @@ public class CAOClient
     }
 
     //@TODO Need to allow someone to log in
-    private static void login(Scanner keyboard, boolean loggedIntoAccount, PrintWriter output, Scanner input, String response)
+    private static String login(Scanner keyboard)
     {
         //a person enters their cao number, date of birth and password
         System.out.println("Please enter your CAO number (8 characters long)");
@@ -141,13 +158,6 @@ public class CAOClient
         String caoNumberAsString = (Integer.toString(caoNumber));
         Pattern CAOPattern = Pattern.compile(RegexChecker.CAORegex);
         Matcher CAOMatcher = CAOPattern.matcher(caoNumberAsString);
-
-        System.out.println("Please enter your email");
-        String email = keyboard.next();
-        keyboard.nextLine();
-
-        Pattern emailPattern = Pattern.compile(RegexChecker.emailRegex);
-        Matcher emailMatcher = emailPattern.matcher(email);
 
         System.out.println("Please enter your date of birth (yyyy-mm-dd)");
         String DOB = keyboard.next();
@@ -163,59 +173,40 @@ public class CAOClient
         Pattern passwordPattern = Pattern.compile(RegexChecker.passwordRegex);
         Matcher passwordMatcher = passwordPattern.matcher(password);
 
+        System.out.println("Please enter your email");
+        String email = keyboard.next();
+        keyboard.nextLine();
+
+        Pattern emailPattern = Pattern.compile(RegexChecker.emailRegex);
+        Matcher emailMatcher = emailPattern.matcher(email);
+
         //checks that the info matches the patterns
         if(CAOMatcher.matches() && emailMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches())
         {
-            boolean studentExists = true; // true by default check id, password, and DOB
-
-            //@TODO this needs to be checked by comparing the database to the entered information
-
-            //send a new message
-//            String message = caoNumber+CAOService.BREAKING_CHARACTER+DOB+CAOService.BREAKING_CHARACTER+password+CAOService.BREAKING_CHARACTER;
-//            output.println(message);
-//            output.flush();
-
-            //TODO change this add validation
-            IStudentDAOInterface iStudentDAO = new MySqlStudentDAO();
-
-            try
-            {
-                iStudentDAO.findStudentCAO(caoNumber,DOB,password,email);
-            }
-            catch (DAOException e)
-            {
-                System.out.println("DAO Exception in CAOClient "+e.getMessage());
-            }
-
-
-            //check the login request statement to check for the student details
-
-
-
-
-
-            //compare the values of the student table information
-            //if true change the "loggedIntoAccount" to true
-
-            //create an if statement
-            if(studentExists)
-            {
-                loggedIntoAccount = true;
-            }
-            if(loggedIntoAccount)
-            {
-                System.out.println("You have logged in");
-                loggedInMenuSystem(keyboard, output,input,response);
-            }
-            else
-            {
-                System.out.println("Incorrect login details. Try again");
-            }
+            //LOGIN%%$caoNumber%%$dateOfBirth%%$password
+            return CAOService.BREAKING_CHARACTER+/*CAOService.VARIABLE+*/caoNumber+CAOService.BREAKING_CHARACTER+/*CAOService.VARIABLE+*/DOB+CAOService.BREAKING_CHARACTER+/*CAOService.VARIABLE+*/password+/*CAOService.VARIABLE+*/CAOService.BREAKING_CHARACTER+email;
+//            boolean studentExists = true; // true by default check id, password, and DOB
+//
+//            //create an if statement
+//            if(studentExists)
+//            {
+//                loggedIntoAccount = true;
+//            }
+//            if(loggedIntoAccount)
+//            {
+//                //System.out.println("You have logged in");
+//                //loggedInMenuSystem(keyboard, output,input,response);
+//            }
+//            else
+//            {
+//                System.out.println("Incorrect login details. Try again");
+//            }
         }
         else
         {
-            System.out.println(Colours.RED+"The information provided was invalid"+Colours.RESET);
+            return Colours.RED+"The information provided was invalid"+Colours.RESET;
         }
+
     }
 
     //this allows the the logged in menu to be displayed and used
@@ -335,7 +326,7 @@ public class CAOClient
     }
 
     //@TODO Need to allow a student to be registered make this a student and return them
-    private static void registerStudent(Scanner keyboard)
+    private static String registerStudent(Scanner keyboard)
     {
         //register a student here
         System.out.println("Please enter your CAO number (8 characters long)");
@@ -374,11 +365,15 @@ public class CAOClient
             //System.out.println("Made it");
             //studentManager.addStudent(studentToRegister);
             //@TODO this student needs to be added to a data base
+
+            //@TODO return the string of info then send it in parent method
+            return  CAOService.VARIABLE+caoNumber+CAOService.VARIABLE+DOB+CAOService.VARIABLE+password+CAOService.VARIABLE+email;
         }
         else
         {
             System.out.println(Colours.RED+"Incorrect details for the account"+Colours.RESET);
         }
+        return "FAILED";
     }
 
     private static void displayInitialMenu()
