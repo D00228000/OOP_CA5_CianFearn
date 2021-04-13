@@ -78,6 +78,7 @@ public class CAOClient
                                 output.println(message);
                                 output.flush();
                                 response = input.nextLine();
+                                System.out.println(response);
                                 if(response.equals(CAOService.SUCCESSFUL_LOGIN))
                                 {
                                     loggedIntoAccount = true;
@@ -166,19 +167,19 @@ public class CAOClient
         Pattern DOBPattern = Pattern.compile(RegexChecker.DOBRegex);
         Matcher DOBMatcher = DOBPattern.matcher(DOB);
 
-        System.out.println("Please enter your password (8-16 characters)");
-        String password = keyboard.next();
-        keyboard.nextLine();
-
-        Pattern passwordPattern = Pattern.compile(RegexChecker.passwordRegex);
-        Matcher passwordMatcher = passwordPattern.matcher(password);
-
         System.out.println("Please enter your email");
         String email = keyboard.next();
         keyboard.nextLine();
 
         Pattern emailPattern = Pattern.compile(RegexChecker.emailRegex);
         Matcher emailMatcher = emailPattern.matcher(email);
+
+        System.out.println("Please enter your password (8-16 characters)");
+        String password = keyboard.next();
+        keyboard.nextLine();
+
+        Pattern passwordPattern = Pattern.compile(RegexChecker.passwordRegex);
+        Matcher passwordMatcher = passwordPattern.matcher(password);
 
         //checks that the info matches the patterns
         if(CAOMatcher.matches() && emailMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches())

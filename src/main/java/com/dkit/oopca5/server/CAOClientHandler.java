@@ -60,7 +60,7 @@ public class CAOClientHandler extends Thread
                 //TODO add the functionality methods here the interfaces
                 if (messageComponents[0].equalsIgnoreCase(CAOService.END_SESSION))
                 {
-                    response = "END SESSION";
+                    response = CAOService.SESSION_TERMINATED;
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.REGISTER_COMMAND))
                 {
@@ -76,15 +76,11 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.ATTEMPT_LOGIN))
                 {
-
-                    //getLogin();
-                    //need to remove the $
                     Student studentToCompareWithDatabase = new Student(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
 
-
-                    if(studentToCompareWithDatabase != studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]))
+                    if(studentToCompareWithDatabase.equals(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4])))
                     {
-                        System.out.println("THIS WORKS INCORRECTLY");
+                        //System.out.println("THIS WORKS INCORRECTLY");
 
                         System.out.println("-----------------------------------------");
                         System.out.println(studentToCompareWithDatabase.toString());
@@ -95,10 +91,13 @@ public class CAOClientHandler extends Thread
                         response = CAOService.SUCCESSFUL_LOGIN;
                         //response = CAOService.FAILED_LOGIN;
                     }
-//                    else if(studentToCompareWithDatabase != studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]))
-//                    {
-//                        response = CAOService.FAILED_LOGIN;
-//                    }
+                    else if(!studentToCompareWithDatabase.equals(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4])))
+                    {
+                        System.out.println("Got here");
+                        System.out.println("-----------------------------------------");
+                        System.out.println(studentToCompareWithDatabase.toString());
+                        response = CAOService.FAILED_LOGIN;
+                    }
                     //response = CAOService.SUCCESSFUL_LOGIN;
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.LOG_OUT))
