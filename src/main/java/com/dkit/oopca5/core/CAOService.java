@@ -24,15 +24,21 @@ public class CAOService
     public static final String REGISTER_COMMAND = "REGISTER";
     public static final String SUCCESSFUL_REGISTER = "REGISTERED";
     public static final String FAILED_REGISTER = "REG FAILED";
+
     public static final String ATTEMPT_LOGIN = "ATTEMPT LOGIN";
     public static final String SUCCESSFUL_LOGIN = "LOGIN";
     public static final String FAILED_LOGIN = "FAILED LOGIN";
     public static final String LOG_OUT = "LOGGED OUT";
 
     public static final String DISPLAY_COURSE = "DISPLAY COURSE";
+    public static final String FAILED_DISPLAY_COURSE = "FAILED TO DISPLAY THIS COURSE";
     public static final String DISPLAY_ALL_COURSES = "DISPLAY ALL COURSES";
+
     public static final String DISPLAY_CURRENT_CHOICES = "DISPLAY CURRENT CHOICES";
+
     public static final String UPDATE_CURRENT_CHOICES = "UPDATE CURRENT CHOICES";
+    public static final String UPDATE_CHOICES_FAILED = "FAILED TO UPDATE CHOICES";
+    public static final String UPDATE_CHOICES_SUCCESS = "UPDATED CHOICES";
 
 
 }

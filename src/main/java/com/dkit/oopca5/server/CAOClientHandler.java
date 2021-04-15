@@ -45,6 +45,7 @@ public class CAOClientHandler extends Thread
         String response = "";
         ICourseDAOInterface courseDAOInterface = new MySqlCourseDAO();
         IStudentDAOInterface studentDAOInterface = new MySqlStudentDAO();
+        IStudentCoursesDAOInterface studentCoursesDAOInterface = new MySqlStudentCoursesDAO();
 
         try
         {
@@ -91,14 +92,13 @@ public class CAOClientHandler extends Thread
                         response = CAOService.SUCCESSFUL_LOGIN;
                         //response = CAOService.FAILED_LOGIN;
                     }
-                    else if(!studentToCompareWithDatabase.equals(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4])))
+                    else
                     {
                         System.out.println("Got here");
                         System.out.println("-----------------------------------------");
                         System.out.println(studentToCompareWithDatabase.toString());
                         response = CAOService.FAILED_LOGIN;
                     }
-                    //response = CAOService.SUCCESSFUL_LOGIN;
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.LOG_OUT))
                 {
@@ -106,9 +106,16 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_COURSE))
                 {
-                    //String enteredCourseID = messageComponents[1];
-                    //response = courseDAOInterface.findCertainCourse(messageComponents[1]).toString();
-                    response = "DISPLAY COURSE";
+                    if(courseDAOInterface.findCertainCourse(messageComponents[1]) != null)
+                    {
+                        response = courseDAOInterface.findCertainCourse(messageComponents[1]).toString();
+                    }
+                    else
+                    {
+                        response = CAOService.FAILED_DISPLAY_COURSE;
+                    }
+
+                    //response = "DISPLAY COURSE";
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_ALL_COURSES))
                 {
@@ -118,11 +125,20 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_CURRENT_CHOICES))
                 {
-                    response = "DISPLAY CURRENT CHOICES";
+                    response = studentCoursesDAOInterface.findCertainStudentsChoices(Integer.parseInt(messageComponents[1]));
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.UPDATE_CURRENT_CHOICES))
                 {
-                    response = "UPDATE CURRENT CHOICES";
+
+                    if(courseDAOInterface.findCertainCourse(messageComponents[2]) != null)
+                    {
+                        studentCoursesDAOInterface.updateCourseChoices(Integer.parseInt(messageComponents[1]),messageComponents[2]);
+                        response = CAOService.UPDATE_CHOICES_SUCCESS;
+                    }
+                    else
+                    {
+                        response = CAOService.UPDATE_CHOICES_FAILED;
+                    }
                 }
                 else
                 {

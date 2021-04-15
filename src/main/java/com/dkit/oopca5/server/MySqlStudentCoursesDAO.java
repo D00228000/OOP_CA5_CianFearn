@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 //This DAO will focus on the sql student_course table
 public class MySqlStudentCoursesDAO extends MySqlDAO implements IStudentCoursesDAOInterface
@@ -14,6 +15,7 @@ public class MySqlStudentCoursesDAO extends MySqlDAO implements IStudentCoursesD
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
+        ArrayList<String> choiceCourses = new ArrayList<>();
         String dbCourseID = "";
 
         try
@@ -23,11 +25,10 @@ public class MySqlStudentCoursesDAO extends MySqlDAO implements IStudentCoursesD
             ps = connection.prepareStatement(query);
             rs = ps.executeQuery();
 
-            System.out.println("Your courses are the following");
             while (rs.next())
             {
                 dbCourseID = rs.getString("course_id");
-                System.out.println(dbCourseID);
+                choiceCourses.add(dbCourseID);
             }
         }
         catch (SQLException e)
@@ -56,6 +57,44 @@ public class MySqlStudentCoursesDAO extends MySqlDAO implements IStudentCoursesD
                 throw new DAOException("findCertainStudentsChoices final "+e.getMessage());
             }
         }
-        return dbCourseID;
+        return choiceCourses.toString();
+    }
+
+    @Override
+    public void updateCourseChoices(int caoNumber, String courseToAdd) throws DAOException
+    {
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try
+        {
+            connection = this.getConnection();
+            String query = "insert into student_courses (cao_number,course_id) values ("+caoNumber+",\""+courseToAdd+"\");";
+            ps = connection.prepareStatement(query);
+            ps.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new DAOException("updateCourseChoices " + e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(ps != null)
+                {
+                    ps.close();
+                }
+                if(connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DAOException("findCertainStudentsChoices final "+e.getMessage());
+            }
+        }
+
     }
 }

@@ -15,6 +15,7 @@ import com.dkit.oopca5.server.MySqlStudentDAO;
 
 import java.io.*;
 import java.net.*;
+import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -22,7 +23,8 @@ import java.util.regex.Pattern;
 
 public class CAOClient
 {
-    private static boolean loggedIntoAccount = false;
+    private static int accountLoggedInto = 11112222; //TODO change this to 0 or null I used a sample number here 11112222
+    private static boolean loggedIntoAccount = true; //@TODO NEED TO CHANGE
 
     public static void main(String[] args)
     {
@@ -51,8 +53,8 @@ public class CAOClient
 
                     try
                     {
-                        initialMenuChoices = InitialMenuChoices.values()[Integer.parseInt(keyboard.nextLine().trim())];
-                        System.out.println();
+                        initialMenuChoices = InitialMenuChoices.values()[Integer.parseInt(keyboard.next().trim())];
+                        keyboard.nextLine();
 
                         switch (initialMenuChoices)
                         {
@@ -74,28 +76,26 @@ public class CAOClient
                                 }
                                 break;
                             case LOGIN:
-                                message = CAOService.ATTEMPT_LOGIN+login(keyboard);
-                                output.println(message);
-                                output.flush();
-                                response = input.nextLine();
-                                System.out.println(response);
-                                if(response.equals(CAOService.SUCCESSFUL_LOGIN))
-                                {
-                                    loggedIntoAccount = true;
-                                }
+//                                message = CAOService.ATTEMPT_LOGIN+login(keyboard);
+//                                output.println(message);
+//                                output.flush();
+//                                response = input.nextLine();
+//                                System.out.println(response);
+//                                if(response.equals(CAOService.SUCCESSFUL_LOGIN))
+//                                {
+//                                    loggedIntoAccount = true;
+//                                }
 //                                else if(response.equals(CAOService.FAILED_LOGIN))
 //                                {
 //                                    System.out.println(Colours.RED+"You have failed to log in with these credentials"+Colours.RESET);
+                                      //accountLoggedInto = 0;
 //                                }
-
+                                loggedIntoAccount = true; //@TODO Remove TEMP value
                                 if(loggedIntoAccount)
-
                                 {
                                     System.out.println("You have logged in");
                                     loggedInMenuSystem(keyboard, output,input,response);
                                 }
-
-                                //
                                 break;
                             case QUIT:
                                 message = CAOService.END_SESSION;
@@ -132,7 +132,7 @@ public class CAOClient
                     }
                 }
             }
-            System.out.println("Thanks for using the TCP ComboService");
+            System.out.println("Thanks for using the this CAOService");
             dataSocket.close();
         }
         catch (UnknownHostException e)
@@ -223,8 +223,8 @@ public class CAOClient
 
             try
             {
-                loggedInMenu = LoggedInMenu.values()[Integer.parseInt(keyboard.nextLine().trim())];
-                //keyboard.nextLine();
+                loggedInMenu = LoggedInMenu.values()[Integer.parseInt(keyboard.next().trim())];
+                keyboard.nextLine();
 
                 switch (loggedInMenu)
                 {
@@ -239,37 +239,30 @@ public class CAOClient
                         loggedInMenu = loggedInMenu.LOGOUT;
                         break;
                     case DISPLAY_COURSE:
-                        //displayCertainCourse(output);
-                        message = CAOService.DISPLAY_COURSE;
+                        message = CAOService.DISPLAY_COURSE+CAOService.BREAKING_CHARACTER+displayCertainCourse();
                         output.println(message);
                         output.flush();
                         response = input.nextLine();
                         System.out.println(response);
                         break;
-                    case DISPLAY_ALL_COURSES:
-                        message = CAOService.DISPLAY_ALL_COURSES;
+                    case DISPLAY_ALL_COURSES://@TODO I STOOPED HERE
+                        message = CAOService.DISPLAY_ALL_COURSES; //@TODO FIX FORMATTING (ArrayList?)
                         output.println(message);
                         output.flush();
                         response = input.nextLine();
-                        //@TODO try to fix how this is displayed
                         System.out.println(response);//printing out the responses
                         break;
                     case DISPLAY_CURRENT_CHOICES:
-                        message = CAOService.DISPLAY_CURRENT_CHOICES;
+                        message = CAOService.DISPLAY_CURRENT_CHOICES+CAOService.BREAKING_CHARACTER+accountLoggedInto;
                         output.println(message);
                         output.flush();
-                        //displayCurrentChoices(response);
                         response = input.nextLine();
-
                         System.out.println(response);
                         break;
                     case UPDATE_CURRENT_CHOICES:
-                        //login(keyboard,loggedIntoAccount);
-                        message = CAOService.UPDATE_CURRENT_CHOICES;
+                        message = CAOService.UPDATE_CURRENT_CHOICES+CAOService.BREAKING_CHARACTER+accountLoggedInto+CAOService.BREAKING_CHARACTER+updateCurrentChoices();
                         output.println(message);
                         output.flush();
-                        //updateCurrentChoices();
-                        //@TODO may need to remove this response
                         response = input.nextLine();
                         System.out.println(response);
                         break;
@@ -297,24 +290,25 @@ public class CAOClient
         }
     }
 
-    private static void displayCertainCourse(PrintWriter output)
+    private static String displayCertainCourse()
     {
         Scanner keyboard = new Scanner(System.in);
         System.out.print("Please enter a course id here:");
-        String courseIDtoFind = keyboard.nextLine();
-
-        String message = CAOService.DISPLAY_COURSE+CAOService.BREAKING_CHARACTER+courseIDtoFind;
-        output.println(message);
-        output.flush();
+        String courseIDtoFind = keyboard.next();
+        keyboard.nextLine();
+        return courseIDtoFind;
     }
 
-    private static String displayCurrentChoices(String response) {
-        return null;
-    }
+    private static String updateCurrentChoices()
+    {
+        Scanner keyboard = new Scanner(System.in);
+        System.out.print("Please enter the course id you would like to add to your choice list here:");
+        String courseIDToAdd = keyboard.next();
+        keyboard.nextLine();
 
-    private static void updateCurrentChoices() {
+        //TODO add regular expression
+        return courseIDToAdd;
     }
-
 
     private static void displayTheLoggedInMenu()
     {
@@ -345,13 +339,15 @@ public class CAOClient
         Matcher DOBMatcher = DOBPattern.matcher(DOB);
 
         System.out.println("Please enter your password (8-16 characters)");
-        String password = keyboard.nextLine();
+        String password = keyboard.next();
+        keyboard.nextLine();
 
         Pattern passwordPattern = Pattern.compile(RegexChecker.passwordRegex);
         Matcher passwordMatcher = passwordPattern.matcher(password);
 
         System.out.println("Please enter your email");
-        String email = keyboard.nextLine();
+        String email = keyboard.next();
+        keyboard.nextLine();
 
         Pattern emailPattern = Pattern.compile(RegexChecker.emailRegex);
         Matcher emailMatcher = emailPattern.matcher(email);
@@ -368,6 +364,7 @@ public class CAOClient
             //@TODO this student needs to be added to a data base
 
             //@TODO return the string of info then send it in parent method
+            accountLoggedInto = caoNumber;//says the user is logged in by their number
             return  CAOService.VARIABLE+caoNumber+CAOService.VARIABLE+DOB+CAOService.VARIABLE+password+CAOService.VARIABLE+email;
         }
         else
