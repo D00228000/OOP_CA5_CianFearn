@@ -1,5 +1,7 @@
 package com.dkit.oopca5.core;
 
+import java.util.Objects;
+
 /**
  * Author: Cían Fearn
  * Student: D00228000
@@ -71,5 +73,22 @@ public class Student
     public String toString() {
         return "CAO number: " + caoNumber +"\n"+"Date of birth: " + dateOfBirth +
                 "\n" +"password: " + password + "\n" + "email: " + email;
+    }
+
+    @Override   //NOTE: The equals method is used on both strings and objects
+    public boolean equals(Object object)
+    {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        Student student = (Student) object;
+        return caoNumber == student.caoNumber &&
+                Objects.equals(dateOfBirth, student.dateOfBirth) &&
+                Objects.equals(password, student.password) &&
+                Objects.equals(email, student.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(caoNumber, dateOfBirth, password, email);
     }
 }

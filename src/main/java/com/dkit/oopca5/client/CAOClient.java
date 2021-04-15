@@ -23,8 +23,7 @@ import java.util.regex.Pattern;
 
 public class CAOClient
 {
-    private static int accountLoggedInto = 11112222; //TODO change this to 0 or null I used a sample number here 11112222
-    private static boolean loggedIntoAccount = true; //@TODO NEED TO CHANGE
+    private static int accountLoggedInto = 0; //TODO change this to 0 or null I used a sample number here 11112222
 
     public static void main(String[] args)
     {
@@ -76,25 +75,20 @@ public class CAOClient
                                 }
                                 break;
                             case LOGIN:
-//                                message = CAOService.ATTEMPT_LOGIN+login(keyboard);
-//                                output.println(message);
-//                                output.flush();
-//                                response = input.nextLine();
-//                                System.out.println(response);
-//                                if(response.equals(CAOService.SUCCESSFUL_LOGIN))
-//                                {
-//                                    loggedIntoAccount = true;
-//                                }
-//                                else if(response.equals(CAOService.FAILED_LOGIN))
-//                                {
-//                                    System.out.println(Colours.RED+"You have failed to log in with these credentials"+Colours.RESET);
-                                      //accountLoggedInto = 0;
-//                                }
-                                loggedIntoAccount = true; //@TODO Remove TEMP value
-                                if(loggedIntoAccount)
+                                message = CAOService.ATTEMPT_LOGIN+login(keyboard);
+                                output.println(message);
+                                output.flush();
+                                response = input.nextLine();
+                                System.out.println(response);
+                                if(response.equals(CAOService.SUCCESSFUL_LOGIN))
                                 {
                                     System.out.println("You have logged in");
                                     loggedInMenuSystem(keyboard, output,input,response);
+                                }
+                                else if(response.equals(CAOService.FAILED_LOGIN))
+                                {
+                                    System.out.println(Colours.RED+"You have failed to log in with these credentials"+Colours.RESET);
+                                      accountLoggedInto = 0;
                                 }
                                 break;
                             case QUIT:
@@ -184,24 +178,10 @@ public class CAOClient
         //checks that the info matches the patterns
         if(CAOMatcher.matches() && emailMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches())
         {
+            //save the information of who is currently logged in
+            accountLoggedInto = caoNumber;
             //LOGIN%%$caoNumber%%$dateOfBirth%%$password
-            return CAOService.BREAKING_CHARACTER+/*CAOService.VARIABLE+*/caoNumber+CAOService.BREAKING_CHARACTER+/*CAOService.VARIABLE+*/DOB+CAOService.BREAKING_CHARACTER+/*CAOService.VARIABLE+*/password+/*CAOService.VARIABLE+*/CAOService.BREAKING_CHARACTER+email;
-//            boolean studentExists = true; // true by default check id, password, and DOB
-//
-//            //create an if statement
-//            if(studentExists)
-//            {
-//                loggedIntoAccount = true;
-//            }
-//            if(loggedIntoAccount)
-//            {
-//                //System.out.println("You have logged in");
-//                //loggedInMenuSystem(keyboard, output,input,response);
-//            }
-//            else
-//            {
-//                System.out.println("Incorrect login details. Try again");
-//            }
+            return CAOService.BREAKING_CHARACTER+caoNumber+CAOService.BREAKING_CHARACTER+DOB+CAOService.BREAKING_CHARACTER+password+CAOService.BREAKING_CHARACTER+email;
         }
         else
         {
@@ -231,7 +211,6 @@ public class CAOClient
                     //TODO fix methods. currently have loop issues or skips over code
                     case LOGOUT:
                         System.out.println("You have logged out of the System\n");
-                        loggedIntoAccount = false;
                         message = CAOService.LOG_OUT;
                         output.println(message);
                         output.flush();
