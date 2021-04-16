@@ -58,7 +58,6 @@ public class CAOClientHandler extends Thread
 
                 String[] messageComponents = incomingMessage.split(CAOService.BREAKING_CHARACTER);
 
-                //TODO add the functionality methods here the interfaces
                 if (messageComponents[0].equalsIgnoreCase(CAOService.END_SESSION))
                 {
                     response = CAOService.SESSION_TERMINATED;
@@ -67,13 +66,29 @@ public class CAOClientHandler extends Thread
                 {
 
                     //TODO add more to this
+                    if(messageComponents[1].equals(CAOService.INVALID_REGISTRATION))
+                    {
+                        response = CAOService.INVALID_REGISTRATION;
+                    }
+                    else
+                    {
+                        //CAOService.VARIABLE+caoNumber+CAOService.VARIABLE+
+                        //DOB+CAOService.VARIABLE+password+CAOService.VARIABLE+email;
+                        Student studentToRegister = new Student(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
 
-                    response = CAOService.SUCCESSFUL_REGISTER;
-
-                    //create a temporary student object and compare it to what the database returns
-
-                    //courseDAOInterface.findAllCourses().toString();
-                    //need to use an interface to find the student then send back the correct response
+                        //studentToRegister.getCaoNumber() == studentDAOInterface.;
+                        //compare CAO numbers
+                        if(studentToRegister.getCaoNumber() == studentDAOInterface.checkForMatchingCAONumbers(Integer.parseInt(messageComponents[1])  ))
+                        {
+                            System.out.println("made it");
+                            response = CAOService.FAILED_REGISTER;
+                        }
+                        else
+                        {
+                            studentDAOInterface.registerStudent(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
+                            response = CAOService.SUCCESSFUL_REGISTER;
+                        }
+                    }
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.ATTEMPT_LOGIN))
                 {
@@ -81,21 +96,11 @@ public class CAOClientHandler extends Thread
 
                     if(studentToCompareWithDatabase.equals(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4])))
                     {
-                        //System.out.println("THIS WORKS INCORRECTLY");
-
-                        System.out.println("-----------------------------------------");
-                        System.out.println(studentToCompareWithDatabase.toString());
-
-                        System.out.println("-----------------------------------------");
                         System.out.println(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]));
-                        System.out.println("-----------------------------------------");
                         response = CAOService.SUCCESSFUL_LOGIN;
-                        //response = CAOService.FAILED_LOGIN;
                     }
                     else
                     {
-                        System.out.println("Got here");
-                        System.out.println("-----------------------------------------");
                         System.out.println(studentToCompareWithDatabase.toString());
                         response = CAOService.FAILED_LOGIN;
                     }

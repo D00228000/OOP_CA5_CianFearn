@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 
 public class CAOClient
 {
-    private static int accountLoggedInto = 0; //TODO change this to 0 or null I used a sample number here 11112222
+    private static int accountLoggedInto = 0;
 
     public static void main(String[] args)
     {
@@ -58,18 +58,18 @@ public class CAOClient
                         switch (initialMenuChoices)
                         {
                             case REGISTER:
-                                //registerStudent(keyboard);
                                 //@TODO need to register and add to a database
                                 message = CAOService.REGISTER_COMMAND+CAOService.BREAKING_CHARACTER+registerStudent(keyboard);
                                 output.println(message);
                                 output.flush();
 
                                 response = input.nextLine();
+                                System.out.println(response);
                                 if(response.equals(CAOService.SUCCESSFUL_REGISTER))
                                 {
                                     System.out.println("The student has been registered\n");
                                 }
-                                else if(response.equals(CAOService.FAILED_REGISTER))
+                                else
                                 {
                                     System.out.println("The student has not been registered\n");
                                 }
@@ -185,7 +185,7 @@ public class CAOClient
         }
         else
         {
-            return Colours.RED+"The information provided was invalid"+Colours.RESET;
+            return CAOService.INVALID_REGISTRATION;
         }
 
     }
@@ -331,26 +331,14 @@ public class CAOClient
         Pattern emailPattern = Pattern.compile(RegexChecker.emailRegex);
         Matcher emailMatcher = emailPattern.matcher(email);
 
-        //Validating all the information
-        //check CAO number
-        //@TODO maybe make this a single if statement in the future
         if(CAOMatcher.matches() && DOBMatcher.matches() && passwordMatcher.matches() && emailMatcher.matches())
         {
-            //creates the student and call the add method
-            //Student studentToRegister = new Student(caoNumber, DOB, password, email);
-            //System.out.println("Made it");
-            //studentManager.addStudent(studentToRegister);
-            //@TODO this student needs to be added to a data base
-
-            //@TODO return the string of info then send it in parent method
-            accountLoggedInto = caoNumber;//says the user is logged in by their number
-            return  CAOService.VARIABLE+caoNumber+CAOService.VARIABLE+DOB+CAOService.VARIABLE+password+CAOService.VARIABLE+email;
+            return  caoNumber+CAOService.BREAKING_CHARACTER+DOB+CAOService.BREAKING_CHARACTER+password+CAOService.BREAKING_CHARACTER+email;
         }
         else
         {
-            System.out.println(Colours.RED+"Incorrect details for the account"+Colours.RESET);
+            return Colours.RED+"Incorrect details for the account"+Colours.RESET;
         }
-        return "FAILED";
     }
 
     private static void displayInitialMenu()

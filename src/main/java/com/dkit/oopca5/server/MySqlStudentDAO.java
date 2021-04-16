@@ -68,5 +68,88 @@ public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
 
         return returnedStudent;
     }
-    //obtain a student
+
+    @Override
+    public int checkForMatchingCAONumbers(int caoNumber) throws DAOException
+    {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        int dbCAONumber = 0;
+
+        try
+        {
+            connection = this.getConnection();
+            //insert into student(cao_number,dob,password,email) values(12345688,"2001-06-04","securepassword","cian@gmail.com");
+            String query ="select cao_number from student where cao_number = \""+caoNumber+"\";";
+            ps = connection.prepareStatement(query);
+            rs = ps.executeQuery();
+
+            while (rs.next())
+            {
+                dbCAONumber = rs.getInt("cao_number");
+            }
+        }
+        catch (SQLException e)
+        {
+            throw new DAOException("checkForMatchingCAONumbers "+e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(ps != null)
+                {
+                    ps.close();
+                }
+                if(connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DAOException("checkForMatchingCAONumbers final "+e.getMessage());
+            }
+        }
+        return dbCAONumber;
+    }
+
+    @Override
+    public void registerStudent(int caoNumber, String DOB, String password, String email) throws DAOException
+    {
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try
+        {
+            connection = this.getConnection();
+            //insert into student(cao_number,dob,password,email) values(12345688,"2001-06-04","securepassword","cian@gmail.com");
+            String query ="insert into student(cao_number,dob,password,email) values("+caoNumber+",\""+DOB+"\",\""+password+"\",\""+email+"\");";
+            ps = connection.prepareStatement(query);
+            ps.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new DAOException("registerStudent "+e.getMessage());
+        }
+        finally
+        {
+            try
+            {
+                if(ps != null)
+                {
+                    ps.close();
+                }
+                if(connection != null)
+                {
+                    freeConnection(connection);
+                }
+            }
+            catch (SQLException e)
+            {
+                throw new DAOException("registerStudent final "+e.getMessage());
+            }
+        }
+    }
 }
