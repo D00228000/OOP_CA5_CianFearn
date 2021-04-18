@@ -57,9 +57,8 @@ public class CAOClient
                                 message = CAOService.REGISTER_COMMAND+CAOService.BREAKING_CHARACTER+registerStudent(keyboard);
                                 output.println(message);
                                 output.flush();
-
                                 response = input.nextLine();
-                                System.out.println(response);
+                                System.out.println(response+"\n");
                                 break;
                             case LOGIN:
                                 message = CAOService.ATTEMPT_LOGIN+login(keyboard);
@@ -279,7 +278,7 @@ public class CAOClient
 
     private static String registerStudent(Scanner keyboard)
     {
-        //register a student here 
+        //register a student here
         System.out.println("Please enter your CAO number (8 characters long)");
         int caoNumber = keyboard.nextInt();
 
