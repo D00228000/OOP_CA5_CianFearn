@@ -1,5 +1,10 @@
 package com.dkit.oopca5.server;
 
+/**
+ * Name: Cían Fearn
+ * Student Number: D00228000
+ */
+
 /*
 The CAOClientHandler will run as a thread. It should listen for messages from the Client and respond to them.There should be one CAOClientHandler per Client.
  */
@@ -38,7 +43,8 @@ public class CAOClientHandler extends Thread
     }
 
     @Override
-    public void run() {
+    public void run()
+    {
         //custom run method
         String incomingMessage = "";
         String response = "";
@@ -113,8 +119,6 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_ALL_COURSES))
                 {
-                    //@TODO need to fix this
-                    //display the courses contact the database
                     response = courseDAOInterface.findAllCourses().toString();
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_CURRENT_CHOICES))

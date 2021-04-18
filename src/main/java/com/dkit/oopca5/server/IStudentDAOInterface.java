@@ -1,5 +1,8 @@
 package com.dkit.oopca5.server;
-
+/**
+ * Name: Cían Fearn
+ * Student Number: D00228000
+ */
 import com.dkit.oopca5.core.StudentDTO;
 
 public interface IStudentDAOInterface

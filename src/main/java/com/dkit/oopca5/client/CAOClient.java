@@ -1,9 +1,11 @@
 package com.dkit.oopca5.client;
-
-/* The client package should contain all code and classes needed to run the Client
+/**
+ * Name: Cían Fearn
+ * Student Number: D00228000
  */
 
-/* The CAOClient offers students a menu and sends messages to the server using TCP Sockets
+/* The client package should contain all code and classes needed to run the Client
+   The CAOClient offers students a menu and sends messages to the server using TCP Sockets
  */
 
 import com.dkit.oopca5.core.CAOService;
@@ -79,8 +81,6 @@ public class CAOClient
                                 message = CAOService.END_SESSION;
                                 output.println(message);
                                 output.flush();
-
-                                //Listen for a response
                                 response = input.nextLine();
                                 if(response.equals(CAOService.SESSION_TERMINATED))
                                 {

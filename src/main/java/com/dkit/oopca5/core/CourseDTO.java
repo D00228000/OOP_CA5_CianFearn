@@ -1,4 +1,8 @@
 package com.dkit.oopca5.core;
+/**
+ * Name: Cían Fearn
+ * Student Number: D00228000
+ */
 
 public class CourseDTO
 {

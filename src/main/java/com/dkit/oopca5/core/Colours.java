@@ -1,7 +1,7 @@
 package com.dkit.oopca5.core;
-
-/*The core package should contain all of the classes
-  that are shared between the Client and Server
+/**
+ * Name: Cían Fearn
+ * Student Number: D00228000
  */
 
 public class Colours

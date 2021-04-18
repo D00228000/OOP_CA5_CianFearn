@@ -1,7 +1,9 @@
 package com.dkit.oopca5.server;
-
+/**
+ * Name: Cían Fearn
+ * Student Number: D00228000
+ */
 import com.dkit.oopca5.core.CourseDTO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

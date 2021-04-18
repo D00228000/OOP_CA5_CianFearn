@@ -3,12 +3,8 @@ package com.dkit.oopca5.core;
 import java.util.Objects;
 
 /**
- * Author: Cían Fearn
- * Student: D00228000
- * This class is just a base class for the students
- * which was provided with the project brief.
- * It only contains a constructor, a copy constructor,
- * getters, setters and a toString method
+ * Name: Cían Fearn
+ * Student Number: D00228000
  */
 public class StudentDTO
 {

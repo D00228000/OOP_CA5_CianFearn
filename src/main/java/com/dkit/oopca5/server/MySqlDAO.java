@@ -1,5 +1,8 @@
 package com.dkit.oopca5.server;
-
+/**
+ * Name: Cían Fearn
+ * Student Number: D00228000
+ */
 /*
 All of the database functionality should be here. You will need a DAO for each table that you are interacting with in the database
  */
@@ -15,11 +18,8 @@ public class MySqlDAO
     {
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/oop_ca5_cian_fearn";
-        //String url = "jdbc:mysql://localhost:3306/gd2_user_database_2021";
-
         String username = "root";
         String password = "";
-
         Connection connection = null;
 
         try

@@ -1,7 +1,9 @@
 package com.dkit.oopca5.server;
-
+/**
+ * Name: Cían Fearn
+ * Student Number: D00228000
+ */
 import com.dkit.oopca5.core.StudentDTO;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -60,7 +62,6 @@ public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
                 throw new DAOException("findStudentCAO final "+e.getMessage());
             }
         }
-
         return returnedStudent;
     }
 
