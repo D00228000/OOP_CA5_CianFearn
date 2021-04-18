@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 //This DAO will focus on the sql student table
-//Maybe add a student interface //TODO add email for student info and in the database
 public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
 {
     @Override
@@ -22,9 +21,6 @@ public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
         try
         {
             connection = this.getConnection();
-            //note an issue with this sql statement
-            //String query = "select cao_number, dob, password from student where cao_number = "+caoNumber+" and dob = \""+DOB+"\" and password = \""+password+"\";";
-            //select cao_number, dob, password from student where cao_number = 12345678 and dob = "2001-06-04" and password = "testpassword";
             String query = "select cao_number, dob, password, email from student where cao_number = "+caoNumber+" and dob = \""+DOB+"\" and password = \""+password+"\" and email = \""+email+"\";";
             ps = connection.prepareStatement(query);
             rs = ps.executeQuery();
@@ -63,7 +59,6 @@ public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
             {
                 throw new DAOException("findStudentCAO final "+e.getMessage());
             }
-
         }
 
         return returnedStudent;

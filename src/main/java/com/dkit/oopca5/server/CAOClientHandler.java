@@ -79,7 +79,6 @@ public class CAOClientHandler extends Thread
                         //compare CAO numbers
                         if(studentToRegister.getCaoNumber() == studentDAOInterface.checkForMatchingCAONumbers(Integer.parseInt(messageComponents[1])  ))
                         {
-                            System.out.println("made it");
                             response = CAOService.FAILED_REGISTER;
                         }
                         else
@@ -95,18 +94,16 @@ public class CAOClientHandler extends Thread
 
                     if(studentToCompareWithDatabase.equals(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4])))
                     {
-                        System.out.println(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]));
                         response = CAOService.SUCCESSFUL_LOGIN;
                     }
                     else
                     {
-                        System.out.println(studentToCompareWithDatabase.toString());
                         response = CAOService.FAILED_LOGIN;
                     }
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.LOG_OUT))
                 {
-                    response = "LOGGED OUT";
+                    response = CAOService.LOG_OUT;
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_COURSE))
                 {
@@ -118,8 +115,6 @@ public class CAOClientHandler extends Thread
                     {
                         response = CAOService.FAILED_DISPLAY_COURSE;
                     }
-
-                    //response = "DISPLAY COURSE";
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.DISPLAY_ALL_COURSES))
                 {
@@ -133,7 +128,6 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.UPDATE_CURRENT_CHOICES))
                 {
-
                     if(courseDAOInterface.findCertainCourse(messageComponents[2]) != null)
                     {
                         studentCoursesDAOInterface.updateCourseChoices(Integer.parseInt(messageComponents[1]),messageComponents[2]);
