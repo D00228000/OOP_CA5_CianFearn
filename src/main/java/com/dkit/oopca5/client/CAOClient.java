@@ -279,7 +279,7 @@ public class CAOClient
 
     private static String registerStudent(Scanner keyboard)
     {
-        //register a student here
+        //register a student here 
         System.out.println("Please enter your CAO number (8 characters long)");
         int caoNumber = keyboard.nextInt();
 
