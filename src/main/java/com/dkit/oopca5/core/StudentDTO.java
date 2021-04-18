@@ -10,7 +10,7 @@ import java.util.Objects;
  * It only contains a constructor, a copy constructor,
  * getters, setters and a toString method
  */
-public class Student
+public class StudentDTO
 {
     private int caoNumber;  // In the CAO system, cao number is unique identifier for student
     private String dateOfBirth; // yyyy-mm-dd
@@ -21,7 +21,7 @@ public class Student
     // Copies the contents of a Student object argument into
     // a new Student object, and returns that new object (a clone)
     //Copy constructor - will copy all of the attributes over to the new object
-    public Student(Student student)
+    public StudentDTO(StudentDTO student)
     {
         this.caoNumber = student.caoNumber;
         this.dateOfBirth = student.dateOfBirth;
@@ -30,7 +30,7 @@ public class Student
     }
 
     // Constructor
-    public Student(int caoNumber, String dateOfBirth, String password, String email) {
+    public StudentDTO(int caoNumber, String dateOfBirth, String password, String email) {
         this.caoNumber = caoNumber;
         this.dateOfBirth = dateOfBirth;
         this.password = password;
@@ -80,7 +80,7 @@ public class Student
     {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        Student student = (Student) object;
+        StudentDTO student = (StudentDTO) object;
         return caoNumber == student.caoNumber &&
                 Objects.equals(dateOfBirth, student.dateOfBirth) &&
                 Objects.equals(password, student.password) &&

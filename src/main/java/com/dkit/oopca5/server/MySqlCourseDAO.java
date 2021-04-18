@@ -1,6 +1,6 @@
 package com.dkit.oopca5.server;
 
-import com.dkit.oopca5.core.Course;
+import com.dkit.oopca5.core.CourseDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,13 +12,13 @@ import java.util.ArrayList;
 public class MySqlCourseDAO extends MySqlDAO implements ICourseDAOInterface
 {
     @Override
-    public ArrayList<Course> findAllCourses() throws DAOException
+    public ArrayList<CourseDTO> findAllCourses() throws DAOException
     {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Course returnedCourse = null;
-        ArrayList<Course> findAllCoursesArrayList = new ArrayList<>();
+        CourseDTO returnedCourse = null;
+        ArrayList<CourseDTO> findAllCoursesArrayList = new ArrayList<>();
         try
         {
             connection = this.getConnection();
@@ -34,7 +34,7 @@ public class MySqlCourseDAO extends MySqlDAO implements ICourseDAOInterface
                 String title = rs.getString("title");
                 String institution = rs.getString("institution");
 
-                returnedCourse = new Course(courseID,level,title,institution);
+                returnedCourse = new CourseDTO(courseID,level,title,institution);
                 findAllCoursesArrayList.add(returnedCourse);
 
             }
@@ -69,12 +69,12 @@ public class MySqlCourseDAO extends MySqlDAO implements ICourseDAOInterface
     }
 
     @Override
-    public Course findCertainCourse(String courseID) throws DAOException
+    public CourseDTO findCertainCourse(String courseID) throws DAOException
     {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Course returnedCourse = null;
+        CourseDTO returnedCourse = null;
         try
         {
             connection = this.getConnection();
@@ -90,7 +90,7 @@ public class MySqlCourseDAO extends MySqlDAO implements ICourseDAOInterface
                 String title = rs.getString("title");
                 String institution = rs.getString("institution");
 
-                returnedCourse = new Course(dbCourseID,level,title,institution);;
+                returnedCourse = new CourseDTO(dbCourseID,level,title,institution);;
             }
         }
         catch (SQLException e)

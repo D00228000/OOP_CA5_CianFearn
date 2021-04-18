@@ -5,8 +5,7 @@ The CAOClientHandler will run as a thread. It should listen for messages from th
  */
 
 import com.dkit.oopca5.core.CAOService;
-import com.dkit.oopca5.core.Course;
-import com.dkit.oopca5.core.Student;
+import com.dkit.oopca5.core.StudentDTO;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -74,7 +73,7 @@ public class CAOClientHandler extends Thread
                     {
                         //CAOService.VARIABLE+caoNumber+CAOService.VARIABLE+
                         //DOB+CAOService.VARIABLE+password+CAOService.VARIABLE+email;
-                        Student studentToRegister = new Student(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
+                        StudentDTO studentToRegister = new StudentDTO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
 
                         //studentToRegister.getCaoNumber() == studentDAOInterface.;
                         //compare CAO numbers
@@ -92,7 +91,7 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.ATTEMPT_LOGIN))
                 {
-                    Student studentToCompareWithDatabase = new Student(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
+                    StudentDTO studentToCompareWithDatabase = new StudentDTO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
 
                     if(studentToCompareWithDatabase.equals(studentDAOInterface.findStudentCAO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4])))
                     {

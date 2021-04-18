@@ -8,14 +8,9 @@ package com.dkit.oopca5.client;
 
 import com.dkit.oopca5.core.CAOService;
 import com.dkit.oopca5.core.Colours;
-import com.dkit.oopca5.core.Student;
-import com.dkit.oopca5.server.DAOException;
-import com.dkit.oopca5.server.IStudentDAOInterface;
-import com.dkit.oopca5.server.MySqlStudentDAO;
 
 import java.io.*;
 import java.net.*;
-import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.regex.Matcher;

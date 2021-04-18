@@ -1,6 +1,6 @@
 package com.dkit.oopca5.core;
 
-public class Course
+public class CourseDTO
 {
     private String courseId;   // e.g. DK821
     private int level;      // e.g. 7, 8, 9, 10
@@ -10,7 +10,7 @@ public class Course
     // Copy Constructor
     // Accepts a Course object as an argument and copies all the field values
     // into a new Course object. Returns the new cloned object.
-    public Course(Course course)
+    public CourseDTO(CourseDTO course)
     {
         this.courseId = course.courseId;
         this.level = course.level;
@@ -19,7 +19,7 @@ public class Course
     }
 
     // Constructor
-    public Course(String courseId, int level,String title, String institution) {
+    public CourseDTO(String courseId, int level, String title, String institution) {
         this.courseId = courseId;
         this.level = level;
         this.title = title;

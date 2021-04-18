@@ -3,8 +3,8 @@ package com.dkit.oopca5.core.tests;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import com.dkit.oopca5.core.Course;
-import com.dkit.oopca5.core.Student;
+import com.dkit.oopca5.core.CourseDTO;
+import com.dkit.oopca5.core.StudentDTO;
 import com.dkit.oopca5.server.*;
 import org.junit.Test;
 
@@ -48,7 +48,7 @@ public class DatabaseTests
     {
         try
         {
-            Course testCourseID = new Course("DK823",8,"Mathematics and Data", "Dundalk Institute of Technology");
+            CourseDTO testCourseID = new CourseDTO("DK823",8,"Mathematics and Data", "Dundalk Institute of Technology");
             ICourseDAOInterface iCourseDAO = new MySqlCourseDAO();
 
             if(testCourseID == iCourseDAO.findCertainCourse("DK823"))
@@ -75,7 +75,7 @@ public class DatabaseTests
 
         try
         {
-            Student testStudent = new Student(caoNumber,dob,password,email);
+            StudentDTO testStudent = new StudentDTO(caoNumber,dob,password,email);
 
             if(testStudent == iStudent.findStudentCAO(caoNumber,dob,password,email))
             {

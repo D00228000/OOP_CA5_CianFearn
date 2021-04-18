@@ -1,6 +1,6 @@
 package com.dkit.oopca5.server;
 
-import com.dkit.oopca5.core.Student;
+import com.dkit.oopca5.core.StudentDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,12 +12,12 @@ import java.sql.SQLException;
 public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
 {
     @Override
-    public Student findStudentCAO(int caoNumber, String DOB, String password, String email) throws DAOException
+    public StudentDTO findStudentCAO(int caoNumber, String DOB, String password, String email) throws DAOException
     {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Student returnedStudent = null;
+        StudentDTO returnedStudent = null;
 
         try
         {
@@ -35,7 +35,7 @@ public class MySqlStudentDAO extends MySqlDAO implements IStudentDAOInterface
                 String DateOfBirth = rs.getString("dob");
                 String dbPassword = rs.getString("password");
                 String dbEmail = rs.getString("email");
-                returnedStudent = new Student(CAOID,DateOfBirth,dbPassword,dbEmail);
+                returnedStudent = new StudentDTO(CAOID,DateOfBirth,dbPassword,dbEmail);
             }
         }
         catch (SQLException e)
