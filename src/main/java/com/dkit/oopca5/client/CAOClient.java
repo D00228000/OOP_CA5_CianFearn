@@ -151,7 +151,7 @@ public class CAOClient
         Pattern emailPattern = Pattern.compile(RegexChecker.emailRegex);
         Matcher emailMatcher = emailPattern.matcher(email);
 
-        System.out.println("Please enter your password (8-16 characters)");
+        System.out.println("Please enter your password (8 characters minimum)");
         String password = keyboard.next();
         keyboard.nextLine();
 
@@ -294,7 +294,7 @@ public class CAOClient
         Pattern DOBPattern = Pattern.compile(RegexChecker.DOBRegex);
         Matcher DOBMatcher = DOBPattern.matcher(DOB);
 
-        System.out.println("Please enter your password (8-16 characters)");
+        System.out.println("Please enter your password (8 characters minimum)");
         String password = keyboard.next();
         keyboard.nextLine();
 
