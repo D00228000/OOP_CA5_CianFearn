@@ -180,7 +180,7 @@ public class CAOClient
         }
         else
         {
-            return CAOService.INVALID_REGISTRATION;
+            return CAOService.BREAKING_CHARACTER+CAOService.INVALID_REGISTRATION;
         }
 
     }
