@@ -63,21 +63,16 @@ public class CAOClientHandler extends Thread
                 }
                 else if (messageComponents[0].equalsIgnoreCase(CAOService.REGISTER_COMMAND))
                 {
-
-                    //TODO add more to this
                     if(messageComponents[1].equals(CAOService.INVALID_REGISTRATION))
                     {
                         response = CAOService.INVALID_REGISTRATION;
                     }
                     else
                     {
-                        //CAOService.VARIABLE+caoNumber+CAOService.VARIABLE+
-                        //DOB+CAOService.VARIABLE+password+CAOService.VARIABLE+email;
                         StudentDTO studentToRegister = new StudentDTO(Integer.parseInt(messageComponents[1]),messageComponents[2],messageComponents[3] ,messageComponents[4]);
 
-                        //studentToRegister.getCaoNumber() == studentDAOInterface.;
                         //compare CAO numbers
-                        if(studentToRegister.getCaoNumber() == studentDAOInterface.checkForMatchingCAONumbers(Integer.parseInt(messageComponents[1])  ))
+                        if(studentToRegister.getCaoNumber() == studentDAOInterface.checkForMatchingCAONumbers(Integer.parseInt(messageComponents[1])))
                         {
                             response = CAOService.FAILED_REGISTER;
                         }

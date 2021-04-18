@@ -36,7 +36,6 @@ public class MySqlCourseDAO extends MySqlDAO implements ICourseDAOInterface
 
                 returnedCourse = new CourseDTO(courseID,level,title,institution);
                 findAllCoursesArrayList.add(returnedCourse);
-
             }
         }
         catch (SQLException e)

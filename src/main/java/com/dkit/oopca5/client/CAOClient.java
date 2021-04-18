@@ -19,7 +19,6 @@ import java.util.regex.Pattern;
 public class CAOClient
 {
     private static int accountLoggedInto = 0;
-
     public static void main(String[] args)
     {
         try
@@ -53,21 +52,12 @@ public class CAOClient
                         switch (initialMenuChoices)
                         {
                             case REGISTER:
-                                //@TODO need to register and add to a database
                                 message = CAOService.REGISTER_COMMAND+CAOService.BREAKING_CHARACTER+registerStudent(keyboard);
                                 output.println(message);
                                 output.flush();
 
                                 response = input.nextLine();
                                 System.out.println(response);
-                                if(response.equals(CAOService.SUCCESSFUL_REGISTER))
-                                {
-                                    System.out.println("The student has been registered\n");
-                                }
-                                else
-                                {
-                                    System.out.println("The student has not been registered\n");
-                                }
                                 break;
                             case LOGIN:
                                 message = CAOService.ATTEMPT_LOGIN+login(keyboard);
@@ -77,13 +67,12 @@ public class CAOClient
                                 System.out.println(response);
                                 if(response.equals(CAOService.SUCCESSFUL_LOGIN))
                                 {
-                                    System.out.println("You have logged in");
                                     loggedInMenuSystem(keyboard, output,input,response);
                                 }
                                 else if(response.equals(CAOService.FAILED_LOGIN))
                                 {
                                     System.out.println(Colours.RED+"You have failed to log in with these credentials"+Colours.RESET);
-                                      accountLoggedInto = 0;
+                                    accountLoggedInto = 0;
                                 }
                                 break;
                             case QUIT:
@@ -95,7 +84,7 @@ public class CAOClient
                                 response = input.nextLine();
                                 if(response.equals(CAOService.SESSION_TERMINATED))
                                 {
-                                    System.out.println("Session has been terminated");
+                                    System.out.println(Colours.BLUE+"Session has been terminated"+Colours.RESET);
                                 }
                                 break;
                             default:
@@ -103,13 +92,13 @@ public class CAOClient
                         }
                         if(response.equals(CAOService.UNKNOWN))
                         {
-                            System.out.println("Sorry, invalid command");
+                            System.out.println(Colours.RED+"Sorry, invalid command"+Colours.RESET);
                             System.out.println("Please enter a valid option\n");
                         }
                     }
                     catch(NoSuchElementException e)
                     {
-                        System.out.println(Colours.RED+"Selection out of range. Try again:"+Colours.RESET+"\n");
+                        System.out.println(Colours.RED+"Selection out of range. Try again:\n"+Colours.RESET);
                     }
                     catch (ArrayIndexOutOfBoundsException e)
                     {
@@ -121,24 +110,23 @@ public class CAOClient
                     }
                 }
             }
-            System.out.println("Thanks for using the this CAOService");
+            System.out.println(Colours.BLUE+"Thanks for using this CAOService"+Colours.RESET);
             dataSocket.close();
         }
         catch (UnknownHostException e)
         {
-            System.out.println("Problem getting server address "+e.getMessage());
+            System.out.println(Colours.RED+"Problem getting server address "+e.getMessage()+Colours.RESET);
         }
         catch (SocketException e)
         {
-            System.out.println("Problem binding clientSocket to port "+e.getMessage());
+            System.out.println(Colours.RED+"Problem binding clientSocket to port "+e.getMessage()+Colours.RESET);
         }
-        catch (IOException ioException)
+        catch (IOException e)
         {
-            ioException.printStackTrace();
+            System.out.println(Colours.RED+"An ioException has occurred "+e.getMessage()+Colours.RESET);
         }
     }
 
-    //@TODO Need to allow someone to log in
     private static String login(Scanner keyboard)
     {
         //a person enters their cao number, date of birth and password
@@ -182,10 +170,8 @@ public class CAOClient
         {
             return CAOService.BREAKING_CHARACTER+CAOService.INVALID_REGISTRATION;
         }
-
     }
 
-    //this allows the the logged in menu to be displayed and used
     private static void loggedInMenuSystem(Scanner keyboard, PrintWriter output, Scanner input, String response)
     {
         //allow for input and other options
@@ -203,13 +189,12 @@ public class CAOClient
 
                 switch (loggedInMenu)
                 {
-                    //TODO fix methods. currently have loop issues or skips over code
                     case LOGOUT:
-                        System.out.println("You have logged out of the System\n");
                         message = CAOService.LOG_OUT;
                         output.println(message);
                         output.flush();
-                        //loggedInMenu = loggedInMenu.QUIT;
+                        response = input.nextLine();
+                        System.out.println(response+"\n");
                         loggedInMenu = loggedInMenu.LOGOUT;
                         break;
                     case DISPLAY_COURSE:
@@ -219,12 +204,12 @@ public class CAOClient
                         response = input.nextLine();
                         System.out.println(response);
                         break;
-                    case DISPLAY_ALL_COURSES://@TODO I STOOPED HERE
-                        message = CAOService.DISPLAY_ALL_COURSES; //@TODO FIX FORMATTING (ArrayList?)
+                    case DISPLAY_ALL_COURSES:
+                        message = CAOService.DISPLAY_ALL_COURSES;
                         output.println(message);
                         output.flush();
                         response = input.nextLine();
-                        System.out.println(response);//printing out the responses
+                        System.out.println(response);
                         break;
                     case DISPLAY_CURRENT_CHOICES:
                         message = CAOService.DISPLAY_CURRENT_CHOICES+CAOService.BREAKING_CHARACTER+accountLoggedInto;
@@ -245,21 +230,21 @@ public class CAOClient
                 }
                 if(response.equals(CAOService.UNKNOWN))
                 {
-                    System.out.println("Sorry, invalid command");
+                    System.out.println(Colours.RED+"Sorry, invalid command"+Colours.RESET);
                     System.out.println("Please enter a valid option\n");
                 }
             }
             catch(ArrayIndexOutOfBoundsException e)
             {
-                System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
+                System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
             }
             catch(NoSuchElementException e)
             {
-                System.out.println(Colours.RED+"Selection out of range. Try again:"+Colours.RESET);
+                System.out.println(Colours.RED+"Selection out of range. Try again:\n"+Colours.RESET);
             }
             catch (NumberFormatException e)
             {
-                System.out.println(Colours.RED+"Selection out of range. Try again"+Colours.RESET);
+                System.out.println(Colours.RED+"Selection out of range. Try again\n"+Colours.RESET);
             }
         }
     }
@@ -279,8 +264,6 @@ public class CAOClient
         System.out.print("Please enter the course id you would like to add to your choice list here:");
         String courseIDToAdd = keyboard.next();
         keyboard.nextLine();
-
-        //TODO add regular expression
         return courseIDToAdd;
     }
 
@@ -294,7 +277,6 @@ public class CAOClient
         System.out.print("Please enter your option here:");
     }
 
-    //@TODO Need to allow a student to be registered make this a student and return them
     private static String registerStudent(Scanner keyboard)
     {
         //register a student here
@@ -332,7 +314,7 @@ public class CAOClient
         }
         else
         {
-            return Colours.RED+"Incorrect details for the account"+Colours.RESET;
+            return CAOService.INVALID_REGISTRATION;
         }
     }
 
